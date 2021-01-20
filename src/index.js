@@ -1,4 +1,5 @@
-const { app, BrowserWindow } = require('electron');
+const { app } = require('electron');
+const RatioWindow = require('./utils/ratiowindow.js');
 const path = require('path');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -8,8 +9,8 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 
 const createWindow = () => {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
-    width: 800,
+  const mainWindow = new RatioWindow({
+    width: 1000,
     height: 600,
     webPreferences: {
       nodeIntegration: true

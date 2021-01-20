@@ -2,19 +2,20 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Hello World!</title>
+    <title>NES Lightbox</title>
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
     <link rel="stylesheet" href="index.css">
-    <script src="script.js"></script>
   </head>
   <body>
     <section class="wrapper">
       <div class="nametable">
-
+        <div class="displaywrapper">
+          <canvas id="nametabledisplay" width="512" height="480"></canvas>
+        </div>
       </div>
       <div class="vwrap">
         <div class="tileset">
-
+          <canvas id="tilesetdisplay"></canvas>
         </div>
         <div class="palettes">
 
@@ -24,5 +25,6 @@
     <footer class="statusbar">
       <p>Here's the status bar.</p>
     </footer>
+    <script src="script.js"></script>
   </body>
 </html>

@@ -12,18 +12,33 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  height: calc(100% - 1.2rem);
+  height: calc(100% - 1.5rem);
   display: flex;
-  padding: 1rem;
+  overflow: hidden;
+  padding: 1rem 0;
   width: 100%;
 }
 
 .nametable {
-  width: 66%;
+  width: 60%;
+}
+
+.nametable .displaywrapper {
+  width: 90%;
+  margin: 0 auto;
+  max-height: 90%;
+}
+
+#nametabledisplay {
+  display: block;
+  width: 100%;
+  padding-bottom: 93.75%;
+  height: auto;
 }
 
 .vwrap {
-  width: 33%;
+  border-left: 1px solid #888;
+  width: 40%;
 }
 
 .statusbar {
@@ -32,5 +47,11 @@ body {
   bottom: 0;
   left: 0;
   right: 0;
-  height: 1.2rem;
+  height: 1.5rem;
+}
+
+.statusbar p {
+  font-size: 0.8rem;
+  margin: 0;
+  padding: 2px 8px 0;
 }
