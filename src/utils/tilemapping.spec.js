@@ -1,0 +1,72 @@
+/* global test, describe, expect */
+const { convertNCToTileOffset, hexDisplay, getNametableAddresses } = require('./tilemapping.js');
+
+describe('convertNCToTileOffset', () => {
+  test('converts 0,0 to first tile', () => {
+    const result = convertNCToTileOffset(0, 0);
+
+    expect(result).toBe(0);
+  });
+
+  test('converts 1,0 to first tile', () => {
+    const result = convertNCToTileOffset(1, 0);
+
+    expect(result).toBe(0);
+  });
+
+  test('converts 1,1 to first tile', () => {
+    const result = convertNCToTileOffset(1, 1);
+
+    expect(result).toBe(0);
+  });
+
+  test('converts 0,17 to tile number 32', () => {
+    const result = convertNCToTileOffset(0, 17);
+
+    expect(result).toBe(32);
+  });
+
+  test('converts 17,17 to tile number 33', () => {
+    const result = convertNCToTileOffset(17, 17);
+
+    expect(result).toBe(33);
+  });
+
+  test('converts 511,479 to tile number 959', () => {
+    const result = convertNCToTileOffset(511, 479);
+
+    expect(result).toBe(959);
+  });
+});
+
+describe('hexDisplay', () => {
+  test('uses the appropriate width', () => {
+    expect(hexDisplay(0, 4)).toBe('0000');
+    expect(hexDisplay(0, 2)).toBe('00');
+  });
+
+  test('converts to hex appropriately', () => {
+    expect(hexDisplay(0)).toBe('0');
+    expect(hexDisplay(10)).toBe('a');
+    expect(hexDisplay(255)).toBe('ff');
+    expect(hexDisplay(256)).toBe('100');
+  });
+
+  test('converts to hex and pads as needed', () => {
+    expect(hexDisplay(959, 4)).toBe('03bf');
+  });
+});
+
+describe('getNametableAddresses', () => {
+  test('sets appropriate base values', () => {
+    expect(getNametableAddresses(0)).toBe('$2000, $2400, $2800, $2c00');
+  });
+
+  test('works with small values', () => {
+    expect(getNametableAddresses(10)).toBe('$200a, $240a, $280a, $2c0a');
+  });
+
+  test('works with large values', () => {
+    expect(getNametableAddresses(320)).toBe('$2140, $2540, $2940, $2d40');
+  });
+});
