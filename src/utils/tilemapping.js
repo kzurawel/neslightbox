@@ -72,3 +72,12 @@ function getAttrAddresses (offset) {
   return result;
 }
 exports.getAttrAddresses = getAttrAddresses;
+
+function nametableStatusBar (tile) {
+  const nOffset = hexDisplay(tile, 4);
+  const nAddresses = getNametableAddresses(tile);
+  const aOffset = hexDisplay(getAttrOffset(tile), 4);
+  const aAddresses = getAttrAddresses(aOffset);
+  return `Nametable offset: $${nOffset} (${nAddresses})   Attribute offset: $${aOffset} (${aAddresses})`;
+}
+exports.nametableStatusBar = nametableStatusBar;
