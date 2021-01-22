@@ -19,7 +19,7 @@ test('load with valid data', () => {
   expect(t.rawData.length).toBe(8192);
   expect(t.rawData[0]).toBe(23);
   expect(t.rawData[8191]).toBe(23);
-  expect(t.tiles.length).toBe(256);
+  expect(t.tiles.length).toBe(512);
 });
 
 test('load with invalid data', () => {

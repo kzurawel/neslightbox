@@ -81,3 +81,22 @@ function nametableStatusBar (tile) {
   return `Nametable offset: $${nOffset} (${nAddresses})   Attribute offset: $${aOffset} (${aAddresses})`;
 }
 exports.nametableStatusBar = nametableStatusBar;
+
+function convertTCToTileOffset (x, y) {
+  const tileCol128 = Math.floor(x / 2);
+  const tileRow128 = Math.floor(y / 2);
+
+  const tileColRemainder = tileCol128 % 8;
+  const tileRowRemainder = tileRow128 % 8;
+
+  const tileCol = Math.floor((tileCol128 - tileColRemainder) / 8);
+  const tileRow = Math.floor((tileRow128 - tileRowRemainder) / 8);
+
+  return (tileRow * 16) + tileCol;
+}
+exports.convertTCToTileOffset = convertTCToTileOffset;
+
+function tilesetStatusBar (tile) {
+  return `Tile: $${hexDisplay(tile, 2)}`;
+}
+exports.tilesetStatusBar = tilesetStatusBar;

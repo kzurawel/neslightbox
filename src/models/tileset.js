@@ -13,11 +13,8 @@ Tileset.prototype = {
       for (let i = 0; i < buffer.length; i++) {
         this.rawData[i] = buffer[i];
       }
-      for (let i = 0; i < 16; ++i) {
-        for (let j = 0; j < 16; ++j) {
-          const which = i * 16 + j;
-          this.tiles[which] = new Tile(buffer.slice(which, which + 16));
-        }
+      for (let i = 0; i < 512; i++) {
+        this.tiles[i] = new Tile(buffer.slice(i * 16, (i * 16) + 16));
       }
     } else {
       throw new Error(`Unsupported CHR size: ${buffer.length}`);

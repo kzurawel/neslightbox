@@ -34,10 +34,6 @@ body {
   display: block;
   width: 100%;
   height: auto;
-  image-rendering: -moz-crisp-edges;
-  image-rendering: -webkit-crisp-edges;
-  image-rendering: pixelated;
-  image-rendering: crisp-edges;
 }
 
 .vwrap {
@@ -49,8 +45,17 @@ body {
 
 .tileset {
   border-bottom: 1px solid #888;
-  padding: 1rem 0;
   height: 70%;
+  margin: 0 auto;
+  padding: 1rem 0;
+  width: 90%;
+}
+
+#tilesetdisplay {
+  display: block;
+  height: auto;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .statusbar {
