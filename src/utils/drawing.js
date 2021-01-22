@@ -62,9 +62,10 @@ function updateNametableGrid (nctx, nTileGridOn, nAttrGridOn) {
 }
 exports.updateNametableGrid = updateNametableGrid;
 
-function updateTilesets (tctx, tileset, bank, grid) {
-  tctx.fillStyle = 'black';
-  tctx.fillRect(0, 0, 256, 256);
+function updateTilesets (options) {
+  const { context, tileset, bank, grid, selected } = options;
+  context.fillStyle = 'black';
+  context.fillRect(0, 0, 256, 256);
 
   let startTile = 0;
   if (bank === 1) { startTile = 256; }
@@ -76,27 +77,39 @@ function updateTilesets (tctx, tileset, bank, grid) {
     for (let i = 0; i < 256; i++) {
       const col = i % 16;
       const row = (i - col) / 16;
-      tileset.tiles[startTile + i].draw(tctx, col * 16, row * 16, palette);
+      tileset.tiles[startTile + i].draw(context, col * 16, row * 16, palette);
     }
   }
 
   if (grid) {
-    tctx.strokeStyle = '#fff';
-    tctx.lineWidth = 1;
-    tctx.setLineDash([3, 5]);
+    context.strokeStyle = '#fff';
+    context.lineWidth = 1;
+    context.setLineDash([3, 5]);
     for (let i = 0; i < 256; i = i + 16) {
-      tctx.beginPath();
-      tctx.moveTo(i + 0.5, 0.5);
-      tctx.lineTo(i + 0.5, 254.5);
-      tctx.stroke();
-      tctx.closePath();
+      context.beginPath();
+      context.moveTo(i + 0.5, 0.5);
+      context.lineTo(i + 0.5, 254.5);
+      context.stroke();
+      context.closePath();
 
-      tctx.beginPath();
-      tctx.moveTo(0.5, i + 0.5);
-      tctx.lineTo(254.5, i + 0.5);
-      tctx.stroke();
-      tctx.closePath();
+      context.beginPath();
+      context.moveTo(0.5, i + 0.5);
+      context.lineTo(254.5, i + 0.5);
+      context.stroke();
+      context.closePath();
     }
+  }
+
+  if (selected || selected === 0) {
+    const col = selected % 16;
+    const row = (selected - col) / 16;
+    const sx = col * 16;
+    const sy = row * 16;
+
+    context.strokeStyle = '#99f';
+    context.lineWidth = 2;
+    context.setLineDash([]);
+    context.strokeRect(sx, sy, 16, 16);
   }
 }
 exports.updateTilesets = updateTilesets;

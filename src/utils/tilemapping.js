@@ -89,8 +89,10 @@ function convertTCToTileOffset (x, y) {
   const tileColRemainder = tileCol128 % 8;
   const tileRowRemainder = tileRow128 % 8;
 
-  const tileCol = Math.floor((tileCol128 - tileColRemainder) / 8);
-  const tileRow = Math.floor((tileRow128 - tileRowRemainder) / 8);
+  const tileCol = Math.ceil((tileCol128 - tileColRemainder) / 8);
+  let tileRow = Math.ceil((tileRow128 - tileRowRemainder) / 8);
+
+  if (tileRow > 15) { tileRow = 15; }
 
   return (tileRow * 16) + tileCol;
 }

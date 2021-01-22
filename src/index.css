@@ -51,6 +51,12 @@ body {
   width: 90%;
 }
 
+.tileset .label {
+  font-size: 0.8rem;
+  height: 0.8rem;
+  margin: 0 0 4px;
+}
+
 #tilesetdisplay {
   display: block;
   height: auto;

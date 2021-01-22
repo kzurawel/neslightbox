@@ -8,8 +8,9 @@ function Tileset () {
 }
 
 Tileset.prototype = {
-  load: function (buffer) {
+  load: function (buffer, filename) {
     if (buffer.length === 8192) {
+      this.filename = filename;
       for (let i = 0; i < buffer.length; i++) {
         this.rawData[i] = buffer[i];
       }

@@ -48,9 +48,12 @@ function onOpenChr (item, focusedWindow) {
     if (!fileObj.canceled) {
       fs.readFile(fileObj.filePaths[0], (err, fileData) => {
         if (err) { throw new Error(err); }
+        let filenameParts = fileObj.filePaths[0].split('/');
+        filenameParts = filenameParts[filenameParts.length - 1].split('\\');
+        const filename = filenameParts[filenameParts.length - 1];
         focusedWindow.webContents.send('CHR_OPEN', {
           data: Buffer.from(fileData),
-          path: fileObj.filePaths[0]
+          path: filename
         });
       });
     }

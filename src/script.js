@@ -27,31 +27,48 @@ const statusbar = document.querySelector('.statusbar p');
 const nTileGridButton = document.querySelector('#nTileGridButton');
 const nAttrGridButton = document.querySelector('#nAttrGridButton');
 const tGridButton = document.querySelector('#tGridButton');
+const bankSelector = document.querySelectorAll('input[name="bank"]');
+const tilesetLabel = document.querySelector('.tileset .label');
 
 // "global" vars
 let nTileGridOn = false;
 let nAttrGridOn = false;
 let tGridOn = false;
 let currentTileset;
-const currentBank = 1; // will add toggle soon
+let currentBank = 0;
+let currentTile = false;
 
 // event listeners
 nc.addEventListener('mousemove', handleNCMouseMove);
 tc.addEventListener('mousemove', handleTCMouseMove);
+tc.addEventListener('click', handleTCClick);
 nTileGridButton.addEventListener('click', handleNTileGridButton);
 nAttrGridButton.addEventListener('click', handleNAttrGridButton);
 tGridButton.addEventListener('click', handleTGridButton);
+bankSelector.forEach((radio) => {
+  radio.addEventListener('change', () => { handleBankSelector(radio.value); });
+});
 
 ipcRenderer.on('CHR_OPEN', (event, args) => {
   console.log('got CHR_OPEN', event, args);
   const t = new Tileset();
-  t.load(args.data);
+  t.load(args.data, args.path);
   currentTileset = t;
-  console.log('loaded tileset, updating canvas', t);
-  updateTilesets(tctx, currentTileset, currentBank, tGridOn);
+  tilesetLabel.innerHTML = t.filename;
+  updateTilesets(getTilesetProps());
 });
 
 // implementing functions
+
+function getTilesetProps () {
+  return {
+    context: tctx,
+    tileset: currentTileset,
+    bank: currentBank,
+    grid: tGridOn,
+    selected: currentTile
+  };
+}
 
 function handleNCMouseMove (e) {
   const x = Math.floor((e.offsetX / nc.clientWidth) * 512);
@@ -79,5 +96,20 @@ function handleNAttrGridButton (e) {
 
 function handleTGridButton (e) {
   tGridOn = !tGridOn;
-  updateTilesets(tctx, currentTileset, currentBank, tGridOn);
+  updateTilesets(getTilesetProps());
+}
+
+function handleBankSelector (value) {
+  currentBank = parseInt(value, 10);
+  currentTile = false;
+  updateTilesets(getTilesetProps());
+}
+
+function handleTCClick (e) {
+  const x = Math.floor((e.offsetX / tc.clientWidth) * 256);
+  const y = Math.floor((e.offsetY / tc.clientHeight) * 256);
+  const tileOffset = convertTCToTileOffset(x, y);
+
+  currentTile = tileOffset;
+  updateTilesets(getTilesetProps());
 }
