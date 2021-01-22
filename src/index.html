@@ -10,6 +10,7 @@
     <section class="wrapper">
       <div class="nametable">
         <div class="displaywrapper">
+          <p class="label">Nametable</p>
           <canvas id="nametabledisplay" width="512" height="480"></canvas>
           <button id="nAttrGridButton">Attribute grid</button>
           <button id="nTileGridButton">Tile grid</button>
@@ -17,14 +18,20 @@
       </div>
       <div class="vwrap">
         <div class="tileset">
-          <p class="label"></p>
+          <p class="label">Tileset</p>
           <canvas id="tilesetdisplay" width="256" height="256"></canvas>
           <label><input type="radio" name="bank" value="0" checked="true"> Bank A</label>
           <label><input type="radio" name="bank" value="1"> Bank B</label>
           <button id="tGridButton">Grid</button>
         </div>
         <div class="palettes">
+          <div class="paletteswrapper">
+            <p class="label">Palettes</p>
 
+          </div>
+          <div class="colors">
+            <canvas id="colordisplay" width="224" height="64"></canvas>
+          </div>
         </div>
       </div>
     </section>

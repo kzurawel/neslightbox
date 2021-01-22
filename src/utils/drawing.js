@@ -1,3 +1,5 @@
+const { COLORS } = require('../models/colors.js');
+
 function updateNametableGrid (nctx, nTileGridOn, nAttrGridOn) {
   nctx.fillStyle = 'black';
   nctx.fillRect(0, 0, 512, 480);
@@ -113,3 +115,19 @@ function updateTilesets (options) {
   }
 }
 exports.updateTilesets = updateTilesets;
+
+function updateColors (context) {
+  for (let i = 0; i < 56; i++) {
+    const col = i % 14;
+    const row = (i - col) / 14;
+
+    const sx = col * 16;
+    const sy = row * 16;
+
+    const colorVal = `${row}${col.toString(16)}`;
+
+    context.fillStyle = COLORS[colorVal];
+    context.fillRect(sx, sy, sx + 16, sy + 16);
+  }
+}
+exports.updateColors = updateColors;

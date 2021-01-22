@@ -8,7 +8,8 @@ const {
 } = require('./utils/tilemapping.js');
 const {
   updateNametableGrid,
-  updateTilesets
+  updateTilesets,
+  updateColors
 } = require('./utils/drawing.js');
 
 // set up canvases
@@ -21,6 +22,10 @@ const tc = document.querySelector('#tilesetdisplay');
 const tctx = tc.getContext('2d', { alpha: false });
 tctx.fillStyle = 'black';
 tctx.fillRect(0, 0, 256, 256);
+
+const cc = document.querySelector('#colordisplay');
+const cctx = cc.getContext('2d', { alpha: false });
+updateColors(cctx);
 
 // set up dom references
 const statusbar = document.querySelector('.statusbar p');
