@@ -16,11 +16,11 @@ body {
   height: calc(100% - 1.5rem);
   display: flex;
   overflow: hidden;
-  padding: 1rem 0;
   width: 100%;
 }
 
 .nametable {
+  padding: 1rem 0;
   width: 60%;
 }
 
@@ -34,11 +34,23 @@ body {
   display: block;
   width: 100%;
   height: auto;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-crisp-edges;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
 }
 
 .vwrap {
   border-left: 1px solid #888;
+  display: flex;
+  flex-direction: column;
   width: 40%;
+}
+
+.tileset {
+  border-bottom: 1px solid #888;
+  padding: 1rem 0;
+  height: 70%;
 }
 
 .statusbar {

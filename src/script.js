@@ -60,6 +60,11 @@ function updateNametableGrid () {
   if (nTileGridOn) {
     // vertical lines
     for (let i = 0; i < 512; i = i + 16) {
+      if (i % 64 === 0 && nAttrGridOn) {
+        nctx.strokeStyle = '#f66';
+      } else {
+        nctx.strokeStyle = '#eee';
+      }
       nctx.beginPath();
       nctx.moveTo(i, 0);
       nctx.lineTo(i, 479);
@@ -69,6 +74,11 @@ function updateNametableGrid () {
 
     // horizontal lines
     for (let j = 0; j < 480; j = j + 16) {
+      if (j % 64 === 0 && nAttrGridOn) {
+        nctx.strokeStyle = '#f66';
+      } else {
+        nctx.strokeStyle = '#eee';
+      }
       nctx.beginPath();
       nctx.moveTo(0, j);
       nctx.lineTo(511, j);
@@ -77,8 +87,8 @@ function updateNametableGrid () {
     }
   }
 
-  if (nAttrGridOn) {
-    nctx.strokeStyle = '#f33';
+  if (nAttrGridOn && !nTileGridOn) {
+    nctx.strokeStyle = '#f66';
     // vertical lines
     for (let i = 0; i < 512; i = i + 64) {
       nctx.beginPath();

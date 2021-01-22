@@ -7,7 +7,6 @@ test('constructor with no args', () => {
   expect(t.data.length).toBe(16);
   expect(t.selected).toBe(false);
   expect(t.editable).toBe(true);
-  expect(t.hoverText).toBe('');
 });
 
 test('constructor with args', () => {

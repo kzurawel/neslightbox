@@ -6,7 +6,6 @@ function Tile (buffer) {
   }
   this.selected = false;
   this.editable = true;
-  this.hoverText = '';
 }
 
 Tile.prototype = {
