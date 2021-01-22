@@ -1,5 +1,12 @@
 /* global test, describe, expect */
-const { convertNCToTileOffset, hexDisplay, getNametableAddresses } = require('./tilemapping.js');
+const {
+  convertNCToTileOffset,
+  hexDisplay,
+  getNametableAddresses,
+  getAttrOffset,
+  getAttrAddresses,
+  nametableStatusBar
+} = require('./tilemapping.js');
 
 describe('convertNCToTileOffset', () => {
   test('converts 0,0 to first tile', () => {
@@ -68,5 +75,41 @@ describe('getNametableAddresses', () => {
 
   test('works with large values', () => {
     expect(getNametableAddresses(320)).toBe('$2140, $2540, $2940, $2d40');
+  });
+});
+
+describe('getAttrOffset', () => {
+  test('Tile zero is zero', () => {
+    expect(getAttrOffset(0)).toBe(0);
+  });
+
+  test('Tile 4 is 1', () => {
+    expect(getAttrOffset(4)).toBe(1);
+  });
+
+  test('Tile 128 is 8', () => {
+    expect(getAttrOffset(128)).toBe(8);
+  });
+});
+
+describe('getAttrAddresses', () => {
+  test('sets appropriate base values', () => {
+    expect(getAttrAddresses('0')).toBe('$23c0, $27c0, $2bc0, $2fc0');
+  });
+
+  test('works with small values', () => {
+    expect(getAttrAddresses('10')).toBe('$23d0, $27d0, $2bd0, $2fd0');
+  });
+
+  test('works with large values', () => {
+    expect(getAttrAddresses('3f')).toBe('$23ff, $27ff, $2bff, $2fff');
+  });
+});
+
+describe('nametableStatusBar', () => {
+  test('works appropriately for tile 0', () => {
+    const result = nametableStatusBar(0);
+
+    expect(result).toBe('Nametable offset: $0000 ($2000, $2400, $2800, $2c00)   Attribute offset: $0000 ($23c0, $27c0, $2bc0, $2fc0)');
   });
 });

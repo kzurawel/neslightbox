@@ -44,9 +44,9 @@ function getNametableAddresses (input) {
 }
 exports.getNametableAddresses = getNametableAddresses;
 
-function getAttrOffset (input) {
-  const col = input % 32;
-  const row = (input - col) / 32;
+function getAttrOffset (tile) {
+  const col = tile % 32;
+  const row = (tile - col) / 32;
 
   const offset = ((col - (col % 4)) / 4) + (((row - (row % 4)) / 4) * 8);
 

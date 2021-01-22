@@ -17,7 +17,7 @@ module.exports = {
   clearMocks: true,
 
   // Indicates whether the coverage information should be collected while executing the test
-  // collectCoverage: false,
+  collectCoverage: true,
 
   // An array of glob patterns indicating a set of files for which coverage information should be collected
   // collectCoverageFrom: undefined,
@@ -26,20 +26,20 @@ module.exports = {
   coverageDirectory: 'coverage',
 
   // An array of regexp pattern strings used to skip coverage collection
-  // coveragePathIgnorePatterns: [
-  //   "/node_modules/"
-  // ],
+  coveragePathIgnorePatterns: [
+    '/node_modules/'
+  ],
 
   // Indicates which provider should be used to instrument code for coverage
   coverageProvider: 'v8',
 
   // A list of reporter names that Jest uses when writing coverage reports
-  // coverageReporters: [
+  coverageReporters: [
   //   "json",
-  //   "text",
+    'text'
   //   "lcov",
   //   "clover"
-  // ],
+  ],
 
   // An object that configures minimum threshold enforcement for coverage results
   // coverageThreshold: undefined,
@@ -63,7 +63,7 @@ module.exports = {
   // globals: {},
 
   // The maximum amount of workers used to run your tests. Can be specified as % or a number. E.g. maxWorkers: 10% will use 10% of your CPU amount + 1 as the maximum worker number. maxWorkers: 2 will use a maximum of 2 workers.
-  // maxWorkers: "50%",
+  maxWorkers: '30%',
 
   // An array of directory names to be searched recursively up from the requiring module's location
   // moduleDirectories: [

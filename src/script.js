@@ -42,9 +42,59 @@ function handleMouseMove (e) {
 }
 
 function handleNTileGridButton (e) {
-  nTileGridOn = !!nTileGridOn;
+  nTileGridOn = !nTileGridOn;
+  updateNametableGrid();
 }
 
 function handleNAttrGridButton (e) {
-  nAttrGridOn = !!nAttrGridOn;
+  nAttrGridOn = !nAttrGridOn;
+  updateNametableGrid();
+}
+
+function updateNametableGrid () {
+  nctx.fillStyle = 'black';
+  nctx.fillRect(0, 0, 512, 480);
+  nctx.strokeStyle = '#eee';
+  nctx.lineWidth = 1;
+
+  if (nTileGridOn) {
+    // vertical lines
+    for (let i = 0; i < 512; i = i + 16) {
+      nctx.beginPath();
+      nctx.moveTo(i, 0);
+      nctx.lineTo(i, 479);
+      nctx.stroke();
+      nctx.closePath();
+    }
+
+    // horizontal lines
+    for (let j = 0; j < 480; j = j + 16) {
+      nctx.beginPath();
+      nctx.moveTo(0, j);
+      nctx.lineTo(511, j);
+      nctx.stroke();
+      nctx.closePath();
+    }
+  }
+
+  if (nAttrGridOn) {
+    nctx.strokeStyle = '#f33';
+    // vertical lines
+    for (let i = 0; i < 512; i = i + 64) {
+      nctx.beginPath();
+      nctx.moveTo(i, 0);
+      nctx.lineTo(i, 479);
+      nctx.stroke();
+      nctx.closePath();
+    }
+
+    // horizontal lines
+    for (let j = 0; j < 480; j = j + 64) {
+      nctx.beginPath();
+      nctx.moveTo(0, j);
+      nctx.lineTo(511, j);
+      nctx.stroke();
+      nctx.closePath();
+    }
+  }
 }

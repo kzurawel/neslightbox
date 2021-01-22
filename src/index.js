@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const { app } = require('electron');
 const RatioWindow = require('./utils/ratiowindow.js');
 const path = require('path');
 
