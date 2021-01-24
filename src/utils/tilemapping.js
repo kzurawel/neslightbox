@@ -78,7 +78,7 @@ function nametableStatusBar (tile) {
   const nAddresses = getNametableAddresses(tile);
   const aOffset = hexDisplay(getAttrOffset(tile), 2);
   const aAddresses = getAttrAddresses(aOffset);
-  return `Nametable offset: $${nOffset} (${nAddresses})   Attribute offset: $${aOffset} (${aAddresses})`;
+  return `Nametable offset: $${nOffset} (${nAddresses})<span class='spacer'></span>Attribute offset: $${aOffset} (${aAddresses})`;
 }
 exports.nametableStatusBar = nametableStatusBar;
 
@@ -102,3 +102,14 @@ function tilesetStatusBar (tile) {
   return `Tile: $${hexDisplay(tile, 2)}`;
 }
 exports.tilesetStatusBar = tilesetStatusBar;
+
+function convertCCToColor (x, y) {
+  let colorColumn = Math.floor((x / 256) * 14);
+  if (colorColumn > 13) { colorColumn = 13; }
+
+  let colorRow = Math.floor((y / 64) * 4);
+  if (colorRow > 3) { colorRow = 3; }
+
+  return `${colorRow}${colorColumn.toString(16)}`;
+}
+exports.convertCCToColor = convertCCToColor;

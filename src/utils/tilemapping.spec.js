@@ -110,6 +110,6 @@ describe('nametableStatusBar', () => {
   test('works appropriately for tile 0', () => {
     const result = nametableStatusBar(0);
 
-    expect(result).toBe('Nametable offset: $0000 ($2000, $2400, $2800, $2c00)   Attribute offset: $00 ($23c0, $27c0, $2bc0, $2fc0)');
+    expect(result).toBe('Nametable offset: $0000 ($2000, $2400, $2800, $2c00)<span class=\'spacer\'></span>Attribute offset: $00 ($23c0, $27c0, $2bc0, $2fc0)');
   });
 });

@@ -65,15 +65,12 @@ function updateNametableGrid (nctx, nTileGridOn, nAttrGridOn) {
 exports.updateNametableGrid = updateNametableGrid;
 
 function updateTilesets (options) {
-  const { context, tileset, bank, grid, selected } = options;
+  const { context, tileset, bank, grid, selected, palette } = options;
   context.fillStyle = 'black';
   context.fillRect(0, 0, 256, 256);
 
   let startTile = 0;
   if (bank === 1) { startTile = 256; }
-  const palette = {
-    colors: ['0d', '00', '10', '20']
-  };
 
   if (tileset) {
     for (let i = 0; i < 256; i++) {

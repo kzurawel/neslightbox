@@ -44,7 +44,7 @@ body {
 }
 
 .tileset {
-  height: 70%;
+  height: 66%;
   margin: 0 auto;
   padding: 1rem 0;
   width: 90%;
@@ -56,8 +56,27 @@ body {
 
 .paletteswrapper {
   margin: 0 auto;
-  padding: 1rem 0;
+  padding: 1rem 0 0;
   width: 90%;
+}
+
+.paletterow {
+  display: flex;
+  flex-direction: horizontal;
+  margin-bottom: 0.5rem;
+}
+
+.paletterow span {
+  display: block;
+  width: 1.5rem;
+}
+
+.paletterow canvas {
+  border: 1px solid #888;
+}
+
+.paletterow span.spacer {
+  width: 2rem;
 }
 
 .label {
@@ -74,10 +93,10 @@ body {
 }
 
 #colordisplay {
-  border: 1px solid #ccc;
+  border: 1px solid #888;
   display: block;
   margin: 0 auto;
-  width: 90%;
+  width: 80%;
 }
 
 .statusbar {
@@ -93,4 +112,9 @@ body {
   font-size: 0.8rem;
   margin: 0;
   padding: 2px 8px 0;
+}
+
+.statusbar .spacer {
+  display: inline-block;
+  width: 1rem;
 }
