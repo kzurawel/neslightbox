@@ -105,7 +105,7 @@ function updateTilesets (options) {
     const sx = col * 16;
     const sy = row * 16;
 
-    context.strokeStyle = '#99f';
+    context.strokeStyle = '#ff0';
     context.lineWidth = 2;
     context.setLineDash([]);
     context.strokeRect(sx, sy, 16, 16);

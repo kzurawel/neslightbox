@@ -4,12 +4,14 @@ function Tileset () {
   this.rawData = new Uint8Array(8192);
   this.tiles = [];
   this.is8x16 = false; // for 8x16 tiles
+  this.filepath = '';
   this.filename = '';
 }
 
 Tileset.prototype = {
-  load: function (buffer, filename) {
+  load: function (buffer, filepath, filename) {
     if (buffer.length === 8192) {
+      this.filepath = filepath;
       this.filename = filename;
       for (let i = 0; i < buffer.length; i++) {
         this.rawData[i] = buffer[i];

@@ -67,6 +67,7 @@ palettes.forEach((palette) => {
 
 // event listeners
 nc.addEventListener('mousemove', handleNCMouseMove);
+nc.addEventListener('click', handleNCClick);
 tc.addEventListener('mousemove', handleTCMouseMove);
 tc.addEventListener('click', handleTCClick);
 nTileGridButton.addEventListener('click', handleNTileGridButton);
@@ -93,7 +94,7 @@ cc.addEventListener('click', handleCCClick);
 ipcRenderer.on('CHR_OPEN', (event, args) => {
   console.log('got CHR_OPEN', event, args);
   const t = new Tileset();
-  t.load(args.data, args.path);
+  t.load(args.data, args.path, args.file);
   currentTileset = t;
   tilesetLabel.innerHTML = t.filename;
   updateTilesets(getTilesetProps());
@@ -152,7 +153,11 @@ function handleTCClick (e) {
   const y = Math.floor((e.offsetY / tc.clientHeight) * 256);
   const tileOffset = convertTCToTileOffset(x, y);
 
-  currentTile = tileOffset;
+  if (currentTile !== tileOffset) {
+    currentTile = tileOffset;
+  } else {
+    currentTile = false;
+  }
   updateTilesets(getTilesetProps());
 }
 
@@ -210,4 +215,8 @@ function handleCCClick (e) {
   palettes[currentPalette].colors[currentColorIndex] = color;
   palettes[currentPalette].update(currentColorIndex);
   updateTilesets(getTilesetProps());
+}
+
+function handleNCClick (e) {
+  if (currentTile === false) { return; }
 }

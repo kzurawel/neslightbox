@@ -53,7 +53,8 @@ function onOpenChr (item, focusedWindow) {
         const filename = filenameParts[filenameParts.length - 1];
         focusedWindow.webContents.send('CHR_OPEN', {
           data: Buffer.from(fileData),
-          path: filename
+          path: fileObj.filePaths[0],
+          file: filename
         });
       });
     }
