@@ -5,8 +5,9 @@ test('constructor with no args', () => {
   const t = new Tileset();
 
   expect(t.rawData.length).toBe(8192);
-  expect(t.tiles.length).toBe(0);
+  expect(t.tiles.length).toBe(512);
   expect(t.is8x16).toBe(false);
+  expect(t.filepath).toBe('');
   expect(t.filename).toBe('');
 });
 

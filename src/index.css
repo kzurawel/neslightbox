@@ -28,12 +28,21 @@ body {
   width: 90%;
   margin: 0 auto;
   max-height: 90%;
+  position: relative;
 }
 
 #nametabledisplay {
   display: block;
   width: 100%;
   height: auto;
+}
+
+#nametablegrid {
+  display: block;
+  height: auto;
+  position: absolute;
+  top: calc(0.8rem + 4px);
+  width: 100%;
 }
 
 .vwrap {

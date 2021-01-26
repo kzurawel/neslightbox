@@ -16,7 +16,7 @@ Palette.prototype = {
       this.context.fillRect(i * 24, 0, i * 24 + 24, 24);
     }
 
-    if (selected) {
+    if (selected !== false) {
       this.context.strokeStyle = '#ff0';
       this.context.lineWidth = 2;
       this.context.strokeRect(selected * 24, 0, 24, 24);

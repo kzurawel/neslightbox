@@ -2,10 +2,14 @@ const { Tile } = require('./tile.js');
 
 function Tileset () {
   this.rawData = new Uint8Array(8192);
-  this.tiles = [];
+  this.tiles = new Array(512);
+  for (let i = 0; i < 512; i++) {
+    this.tiles[i] = new Tile();
+  }
   this.is8x16 = false; // for 8x16 tiles
   this.filepath = '';
   this.filename = '';
+  this.bank = 0;
 }
 
 Tileset.prototype = {

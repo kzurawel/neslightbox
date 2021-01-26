@@ -55,7 +55,7 @@ Tile.prototype = {
         const startX = x + (col * 2);
         const startY = y + (row * 2);
         ctx.fillStyle = displayColor;
-        ctx.fillRect(startX, startY, startX + 2, startY + 2);
+        ctx.fillRect(startX, startY, 2, 2);
       }
     }
   }

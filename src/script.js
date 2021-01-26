@@ -1,6 +1,7 @@
 const { ipcRenderer } = require('electron');
 const { Tileset } = require('./models/tileset.js');
 const { Palette } = require('./models/palette.js');
+const { Nametable } = require('./models/nametable.js');
 const {
   convertNCToTileOffset,
   nametableStatusBar,
@@ -19,6 +20,11 @@ const nc = document.querySelector('#nametabledisplay');
 const nctx = nc.getContext('2d', { alpha: false });
 nctx.fillStyle = 'black';
 nctx.fillRect(0, 0, 512, 480);
+
+const ngc = document.querySelector('#nametablegrid');
+const ngctx = ngc.getContext('2d');
+ngctx.fillStyle = '#00000000';
+ngctx.fillRect(0, 0, 512, 480);
 
 const tc = document.querySelector('#tilesetdisplay');
 const tctx = tc.getContext('2d', { alpha: false });
@@ -47,11 +53,11 @@ const p3c = document.querySelector('#palette3');
 let nTileGridOn = false;
 let nAttrGridOn = false;
 let tGridOn = false;
-let currentTileset;
-let currentBank = 0;
+const tileset = new Tileset();
 let currentTile = false;
 let currentPalette = 0;
 let currentColorIndex = false;
+const currentNametable = new Nametable(); // make mutable later
 
 // default palettes
 const palettes = [
@@ -66,8 +72,8 @@ palettes.forEach((palette) => {
 });
 
 // event listeners
-nc.addEventListener('mousemove', handleNCMouseMove);
-nc.addEventListener('click', handleNCClick);
+ngc.addEventListener('mousemove', handleNCMouseMove); // grid because it's on top
+ngc.addEventListener('click', handleNCClick); // same here
 tc.addEventListener('mousemove', handleTCMouseMove);
 tc.addEventListener('click', handleTCClick);
 nTileGridButton.addEventListener('click', handleNTileGridButton);
@@ -93,10 +99,8 @@ cc.addEventListener('click', handleCCClick);
 
 ipcRenderer.on('CHR_OPEN', (event, args) => {
   console.log('got CHR_OPEN', event, args);
-  const t = new Tileset();
-  t.load(args.data, args.path, args.file);
-  currentTileset = t;
-  tilesetLabel.innerHTML = t.filename;
+  tileset.load(args.data, args.path, args.file);
+  tilesetLabel.innerHTML = tileset.filename;
   updateTilesets(getTilesetProps());
 });
 
@@ -105,11 +109,18 @@ ipcRenderer.on('CHR_OPEN', (event, args) => {
 function getTilesetProps () {
   return {
     context: tctx,
-    tileset: currentTileset,
-    bank: currentBank,
+    tileset,
     grid: tGridOn,
     selected: currentTile,
     palette: palettes[currentPalette]
+  };
+}
+
+function getNametableGridProps () {
+  return {
+    ctx: ngctx,
+    tileGrid: nTileGridOn,
+    attrGrid: nAttrGridOn
   };
 }
 
@@ -129,12 +140,12 @@ function handleTCMouseMove (e) {
 
 function handleNTileGridButton (e) {
   nTileGridOn = !nTileGridOn;
-  updateNametableGrid(nctx, nTileGridOn, nAttrGridOn);
+  updateNametableGrid(getNametableGridProps());
 }
 
 function handleNAttrGridButton (e) {
   nAttrGridOn = !nAttrGridOn;
-  updateNametableGrid(nctx, nTileGridOn, nAttrGridOn);
+  updateNametableGrid(getNametableGridProps());
 }
 
 function handleTGridButton (e) {
@@ -143,7 +154,7 @@ function handleTGridButton (e) {
 }
 
 function handleBankSelector (value) {
-  currentBank = parseInt(value, 10);
+  tileset.bank = parseInt(value, 10);
   currentTile = false;
   updateTilesets(getTilesetProps());
 }
@@ -207,16 +218,33 @@ function handlePaletteClick (e) {
 }
 
 function handleCCClick (e) {
-  if (!currentColorIndex) { return; }
+  if (currentColorIndex === false) { return; }
   const x = Math.floor((e.offsetX / cc.clientWidth) * 256);
   const y = Math.floor((e.offsetY / cc.clientHeight) * 64);
   const color = convertCCToColor(x, y);
 
-  palettes[currentPalette].colors[currentColorIndex] = color;
+  if (currentColorIndex === 0) {
+    // update all color 0's to match
+    for (let i = 0; i < 4; i++) {
+      palettes[i].colors[currentColorIndex] = color;
+      palettes[i].update();
+    }
+  } else {
+    palettes[currentPalette].colors[currentColorIndex] = color;
+  }
   palettes[currentPalette].update(currentColorIndex);
+
   updateTilesets(getTilesetProps());
+  currentNametable.draw(nctx, tileset, palettes);
 }
 
 function handleNCClick (e) {
   if (currentTile === false) { return; }
+
+  const x = Math.floor((e.offsetX / nc.clientWidth) * 512);
+  const y = Math.floor((e.offsetY / nc.clientHeight) * 480);
+  const tileOffset = convertNCToTileOffset(x, y);
+
+  currentNametable.data[tileOffset] = currentTile;
+  currentNametable.update(nctx, tileOffset, tileset, palettes[currentPalette]);
 }

@@ -1,76 +1,82 @@
 const { COLORS } = require('../models/colors.js');
 
-function updateNametableGrid (nctx, nTileGridOn, nAttrGridOn) {
-  nctx.fillStyle = 'black';
-  nctx.fillRect(0, 0, 512, 480);
-  nctx.strokeStyle = '#fff';
-  nctx.lineWidth = 1;
+function updateNametableGrid (options) {
+  const {
+    ctx,
+    tileGrid,
+    attrGrid
+  } = options;
 
-  if (nTileGridOn) {
+  ctx.clearRect(0, 0, 512, 480);
+
+  ctx.strokeStyle = '#fff';
+  ctx.lineWidth = 1;
+
+  if (tileGrid) {
     // vertical lines
     for (let i = 0; i < 512; i = i + 16) {
-      if (i % 64 === 0 && nAttrGridOn) {
-        nctx.strokeStyle = '#f66';
-        nctx.setLineDash([8, 8]);
+      if (i % 64 === 0 && attrGrid) {
+        ctx.strokeStyle = '#f66';
+        ctx.setLineDash([8, 8]);
       } else {
-        nctx.strokeStyle = '#fff';
-        nctx.setLineDash([1, 7]);
+        ctx.strokeStyle = '#fff';
+        ctx.setLineDash([1, 7]);
       }
-      nctx.beginPath();
-      nctx.moveTo(i + 0.5, 0.5);
-      nctx.lineTo(i + 0.5, 479.5);
-      nctx.stroke();
-      nctx.closePath();
+      ctx.beginPath();
+      ctx.moveTo(i + 0.5, 0.5);
+      ctx.lineTo(i + 0.5, 479.5);
+      ctx.stroke();
+      ctx.closePath();
     }
 
     // horizontal lines
     for (let j = 0; j < 480; j = j + 16) {
-      if (j % 64 === 0 && nAttrGridOn) {
-        nctx.strokeStyle = '#f66';
-        nctx.setLineDash([8, 8]);
+      if (j % 64 === 0 && attrGrid) {
+        ctx.strokeStyle = '#f66';
+        ctx.setLineDash([8, 8]);
       } else {
-        nctx.strokeStyle = '#fff';
-        nctx.setLineDash([1, 7]);
+        ctx.strokeStyle = '#fff';
+        ctx.setLineDash([1, 7]);
       }
-      nctx.beginPath();
-      nctx.moveTo(0.5, j + 0.5);
-      nctx.lineTo(511.5, j + 0.5);
-      nctx.stroke();
-      nctx.closePath();
+      ctx.beginPath();
+      ctx.moveTo(0.5, j + 0.5);
+      ctx.lineTo(511.5, j + 0.5);
+      ctx.stroke();
+      ctx.closePath();
     }
   }
 
-  if (nAttrGridOn && !nTileGridOn) {
-    nctx.strokeStyle = '#f66';
-    nctx.setLineDash([8, 8]);
+  if (attrGrid && !tileGrid) {
+    ctx.strokeStyle = '#f66';
+    ctx.setLineDash([8, 8]);
     // vertical lines
     for (let i = 0; i < 512; i = i + 64) {
-      nctx.beginPath();
-      nctx.moveTo(i + 0.5, 0.5);
-      nctx.lineTo(i + 0.5, 479.5);
-      nctx.stroke();
-      nctx.closePath();
+      ctx.beginPath();
+      ctx.moveTo(i + 0.5, 0.5);
+      ctx.lineTo(i + 0.5, 479.5);
+      ctx.stroke();
+      ctx.closePath();
     }
 
     // horizontal lines
     for (let j = 0; j < 480; j = j + 64) {
-      nctx.beginPath();
-      nctx.moveTo(0.5, j + 0.5);
-      nctx.lineTo(511.5, j + 0.5);
-      nctx.stroke();
-      nctx.closePath();
+      ctx.beginPath();
+      ctx.moveTo(0.5, j + 0.5);
+      ctx.lineTo(511.5, j + 0.5);
+      ctx.stroke();
+      ctx.closePath();
     }
   }
 }
 exports.updateNametableGrid = updateNametableGrid;
 
 function updateTilesets (options) {
-  const { context, tileset, bank, grid, selected, palette } = options;
-  context.fillStyle = 'black';
+  const { context, tileset, grid, selected, palette } = options;
+  context.fillStyle = COLORS[palette.colors[0]];
   context.fillRect(0, 0, 256, 256);
 
   let startTile = 0;
-  if (bank === 1) { startTile = 256; }
+  if (tileset.bank === 1) { startTile = 256; }
 
   if (tileset) {
     for (let i = 0; i < 256; i++) {
@@ -99,7 +105,7 @@ function updateTilesets (options) {
     }
   }
 
-  if (selected || selected === 0) {
+  if (selected !== false) {
     const col = selected % 16;
     const row = (selected - col) / 16;
     const sx = col * 16;
