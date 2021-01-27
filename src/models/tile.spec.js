@@ -5,8 +5,6 @@ test('constructor with no args', () => {
   const t = new Tile();
 
   expect(t.data.length).toBe(16);
-  expect(t.selected).toBe(false);
-  expect(t.editable).toBe(true);
 });
 
 test('constructor with args', () => {

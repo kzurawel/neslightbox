@@ -18,8 +18,6 @@ function Tile (buffer) {
   } else {
     this.data = new Uint8Array(16);
   }
-  this.selected = false;
-  this.editable = true;
 }
 
 Tile.prototype = {
