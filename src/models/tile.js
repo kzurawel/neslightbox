@@ -41,7 +41,7 @@ Tile.prototype = {
     }
   },
   draw: function (ctx, x, y, palette) {
-    // draw tile data as a 16x16 image
+    // draw tile data as a 8x8 image
     for (let row = 0; row < 8; row++) {
       for (let col = 0; col < 8; col++) {
         const lowBit = (this.data[row] & BIT_PATTERNS[col]) === 0 ? '0' : '1';
@@ -50,10 +50,10 @@ Tile.prototype = {
         const pixelColor = palette.colors[paletteValue];
         const displayColor = COLORS[pixelColor];
 
-        const startX = x + (col * 2);
-        const startY = y + (row * 2);
+        const startX = x + col;
+        const startY = y + row;
         ctx.fillStyle = displayColor;
-        ctx.fillRect(startX, startY, 2, 2);
+        ctx.fillRect(startX, startY, 1, 1);
       }
     }
   }

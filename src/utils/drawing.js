@@ -15,7 +15,7 @@ function updateNametableGrid (options) {
   if (tileGrid) {
     // vertical lines
     for (let i = 0; i < 512; i = i + 16) {
-      if (i % 64 === 0 && attrGrid) {
+      if (i % 32 === 0 && attrGrid) {
         ctx.strokeStyle = '#f66';
         ctx.setLineDash([8, 8]);
       } else {
@@ -31,7 +31,7 @@ function updateNametableGrid (options) {
 
     // horizontal lines
     for (let j = 0; j < 480; j = j + 16) {
-      if (j % 64 === 0 && attrGrid) {
+      if (j % 32 === 0 && attrGrid) {
         ctx.strokeStyle = '#f66';
         ctx.setLineDash([8, 8]);
       } else {
@@ -71,35 +71,38 @@ function updateNametableGrid (options) {
 exports.updateNametableGrid = updateNametableGrid;
 
 function updateTilesets (options) {
-  const { context, tileset, grid, selected, palette } = options;
+  const { context, tileset, selected, palette } = options;
   context.fillStyle = COLORS[palette.colors[0]];
-  context.fillRect(0, 0, 256, 256);
+  context.fillRect(0, 0, 128, 128);
 
   let startTile = 0;
   if (tileset.bank === 1) { startTile = 256; }
 
-  if (tileset) {
-    for (let i = 0; i < 256; i++) {
-      const col = i % 16;
-      const row = (i - col) / 16;
-      tileset.tiles[startTile + i].draw(context, col * 16, row * 16, palette);
-    }
+  for (let i = 0; i < 256; i++) {
+    const col = i % 16;
+    const row = (i - col) / 16;
+    tileset.tiles[startTile + i].draw(context, col * 8, row * 8, palette);
   }
 
+}
+exports.updateTilesets = updateTilesets;
+
+function updateTilesetGrid (context, grid, selected) {
+  context.clearRect(0, 0, 256, 256);
   if (grid) {
     context.strokeStyle = '#fff';
     context.lineWidth = 1;
-    context.setLineDash([3, 5]);
+    context.setLineDash([1, 7]);
     for (let i = 0; i < 256; i = i + 16) {
       context.beginPath();
       context.moveTo(i + 0.5, 0.5);
-      context.lineTo(i + 0.5, 254.5);
+      context.lineTo(i + 0.5, 255.5);
       context.stroke();
       context.closePath();
 
       context.beginPath();
       context.moveTo(0.5, i + 0.5);
-      context.lineTo(254.5, i + 0.5);
+      context.lineTo(255.5, i + 0.5);
       context.stroke();
       context.closePath();
     }
@@ -117,7 +120,7 @@ function updateTilesets (options) {
     context.strokeRect(sx, sy, 16, 16);
   }
 }
-exports.updateTilesets = updateTilesets;
+exports.updateTilesetGrid = updateTilesetGrid;
 
 function updateColors (context) {
   for (let i = 0; i < 56; i++) {
@@ -134,3 +137,27 @@ function updateColors (context) {
   }
 }
 exports.updateColors = updateColors;
+
+function updateTileEditorGrid (context, grid) {
+  if (!grid) {
+    context.clearRect(0, 0, 256, 256);
+  } else {
+    context.strokeStyle = '#fff';
+    context.lineWidth = 1;
+    context.setLineDash([1, 7]);
+    for (let i = 0; i < 256; i = i + 32) {
+      context.beginPath();
+      context.moveTo(i + 0.5, 0.5);
+      context.lineTo(i + 0.5, 255.5);
+      context.stroke();
+      context.closePath();
+
+      context.beginPath();
+      context.moveTo(0.5, i + 0.5);
+      context.lineTo(255.5, i + 0.5);
+      context.stroke();
+      context.closePath();
+    }
+  }
+}
+exports.updateTileEditorGrid = updateTileEditorGrid;

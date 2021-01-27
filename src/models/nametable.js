@@ -10,7 +10,7 @@ function Nametable () {
 Nametable.prototype = {
   draw: function (ctx, tileset, palettes) {
     ctx.fillStyle = COLORS[palettes[0].colors[0]];
-    ctx.fillRect(0, 0, 512, 480);
+    ctx.fillRect(0, 0, 256, 240);
     for (let i = 0; i < 960; i++) {
       const tile = tileset.bank === 0 ? this.data[i] : this.data[i] + 256;
       if (tile === 0) { continue; }
@@ -22,8 +22,8 @@ Nametable.prototype = {
         x = i % 32;
         y = (i - x) / 32;
       }
-      x = x * 16;
-      y = y * 16;
+      x = x * 8;
+      y = y * 8;
 
       tileset.tiles[tile].draw(ctx, x, y, palettes[1]);
     }
@@ -39,11 +39,11 @@ Nametable.prototype = {
       y = (tileOffset - x) / 32;
     }
 
-    x = x * 16;
-    y = y * 16;
+    x = x * 8;
+    y = y * 8;
 
     ctx.fillStyle = COLORS[palette.colors[0]];
-    ctx.fillRect(x, y, 16, 16);
+    ctx.fillRect(x, y, 8, 8);
 
     const tile = tileset.bank === 0 ? this.data[tileOffset] : this.data[tileOffset] + 256;
 

@@ -37,8 +37,9 @@ button, label, input, canvas {
 
 #nametabledisplay {
   display: block;
-  width: 100%;
   height: auto;
+  image-rendering: pixelated;
+  width: 100%;
 }
 
 #nametablegrid {
@@ -64,6 +65,7 @@ button, label, input, canvas {
   height: 66%;
   margin: 0 auto;
   padding: 1rem 0;
+  position: relative;
   width: 88%;
 }
 
@@ -109,7 +111,16 @@ button, label, input, canvas {
 #tilesetdisplay {
   display: block;
   height: auto;
+  image-rendering: pixelated;
   margin: 0 auto;
+  width: 100%;
+}
+
+#tilesetgrid {
+  display: block;
+  height: auto;
+  position: absolute;
+  top: calc(0.8rem + 20px);
   width: 100%;
 }
 
@@ -175,6 +186,7 @@ button, label, input, canvas {
 }
 
 .tileeditwrapper {
+  position: relative;
   width: 100%;
 }
 
@@ -198,4 +210,11 @@ button, label, input, canvas {
   image-rendering: pixelated;
   width: 80%;
   margin: 1rem auto;
+}
+
+#tileeditorgrid {
+  position: absolute;
+  top: 0;
+  left: 10%;
+  width: 80%;
 }

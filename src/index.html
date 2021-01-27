@@ -11,7 +11,7 @@
       <div class="nametable">
         <div class="displaywrapper">
           <p class="label">Nametable</p>
-          <canvas id="nametabledisplay" width="512" height="480"></canvas>
+          <canvas id="nametabledisplay" width="256" height="240"></canvas>
           <canvas id="nametablegrid" width="512" height="480"></canvas>
           <div class="nametabletools">
             <button id="nAttrGridButton">Attribute grid</button>
@@ -22,7 +22,8 @@
       <div class="vwrap">
         <div class="tileset">
           <p class="label">Tileset</p>
-          <canvas id="tilesetdisplay" width="256" height="256"></canvas>
+          <canvas id="tilesetdisplay" width="128" height="128"></canvas>
+          <canvas id="tilesetgrid" width="256" height="256"></canvas>
           <div class="tilesettools">
             <div>
               <label><input type="radio" name="bank" value="0" checked="true"> Bank A</label>
@@ -57,15 +58,16 @@
     <section class="tileeditbg hidden">
       <div class="tileedit">
         <div class="tileeditwrapper">
-          <canvas id="tileeditor" width="16" height="16"></canvas>
+          <canvas id="tileeditor" width="8" height="8"></canvas>
+          <canvas id="tileeditorgrid" width="256" height="256"></canvas>
           <div class="tileedittools">
             <div>
               <canvas id="tileeditorpalette" width="96" height="24"></canvas>
-              <button id="tileeditorgrid">Grid</button>
+              <button id="teGridButton">Grid</button>
             </div>
             <div>
-              <button id="canceltile">Cancel</button>
-              <button id="savetile">Save</button>
+              <button id="teCancelButton">Cancel</button>
+              <button id="teSaveButton">Save</button>
             </div>
           </div>
         </div>

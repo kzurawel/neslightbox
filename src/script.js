@@ -12,7 +12,9 @@ const {
 const {
   updateNametableGrid,
   updateTilesets,
-  updateColors
+  updateTilesetGrid,
+  updateColors,
+  updateTileEditorGrid
 } = require('./utils/drawing.js');
 
 // set up canvases
@@ -31,12 +33,18 @@ const tctx = tc.getContext('2d', { alpha: false });
 tctx.fillStyle = 'black';
 tctx.fillRect(0, 0, 256, 256);
 
+const tgc = document.querySelector('#tilesetgrid');
+const tgcctx = tgc.getContext('2d');
+
 const cc = document.querySelector('#colordisplay');
 const cctx = cc.getContext('2d', { alpha: false });
 updateColors(cctx);
 
 const tec = document.querySelector('#tileeditor');
 const tecctx = tec.getContext('2d', { alpha: false });
+
+const tegc = document.querySelector('#tileeditorgrid');
+const tegcctx = tegc.getContext('2d');
 
 const tepc = document.querySelector('#tileeditorpalette');
 const tepcctx = tepc.getContext('2d', { alpha: false });
@@ -50,7 +58,8 @@ const bankSelector = document.querySelectorAll('input[name="bank"]');
 const tilesetLabel = document.querySelector('.tileset .label');
 const tEditButton = document.querySelector('#tEditButton');
 const tileEditorWindow = document.querySelector('.tileeditbg');
-const tileEditorCancel = document.querySelector('#canceltile');
+const teGridButton = document.querySelector('#teGridButton');
+const teCancelButton = document.querySelector('#teCancelButton');
 
 // palettes
 const p0c = document.querySelector('#palette0');
@@ -67,6 +76,7 @@ let currentTile = false;
 let currentPalette = 0;
 let currentColorIndex = false;
 const currentNametable = new Nametable(); // make mutable later
+let teGridOn = false;
 
 // default palettes
 const palettes = [
@@ -83,8 +93,8 @@ palettes.forEach((palette) => {
 // event listeners
 ngc.addEventListener('mousemove', handleNCMouseMove); // grid because it's on top
 ngc.addEventListener('click', handleNCClick); // same here
-tc.addEventListener('mousemove', handleTCMouseMove);
-tc.addEventListener('click', handleTCClick);
+tgc.addEventListener('mousemove', handleTCMouseMove);
+tgc.addEventListener('click', handleTCClick);
 nTileGridButton.addEventListener('click', handleNTileGridButton);
 nAttrGridButton.addEventListener('click', handleNAttrGridButton);
 tGridButton.addEventListener('click', handleTGridButton);
@@ -106,7 +116,8 @@ p3c.addEventListener('click', handlePaletteClick);
 cc.addEventListener('mousemove', handleCCMouseMove);
 cc.addEventListener('click', handleCCClick);
 tEditButton.addEventListener('click', handleTEditButton);
-tileEditorCancel.addEventListener('click', handleTileEditorCancel);
+teCancelButton.addEventListener('click', handleTECancelButton);
+teGridButton.addEventListener('click', handleTEGridButton);
 
 ipcRenderer.on('CHR_OPEN', (event, args) => {
   console.log('got CHR_OPEN', event, args);
@@ -121,8 +132,6 @@ function getTilesetProps () {
   return {
     context: tctx,
     tileset,
-    grid: tGridOn,
-    selected: currentTile,
     palette: palettes[currentPalette]
   };
 }
@@ -161,7 +170,7 @@ function handleNAttrGridButton (e) {
 
 function handleTGridButton (e) {
   tGridOn = !tGridOn;
-  updateTilesets(getTilesetProps());
+  updateTilesetGrid(tgcctx, tGridOn, currentTile);
 }
 
 function handleBankSelector (value) {
@@ -187,6 +196,7 @@ function handleTCClick (e) {
     tEditButton.disabled = true;
   }
   updateTilesets(getTilesetProps());
+  updateTilesetGrid(tgcctx, tGridOn, currentTile);
 }
 
 function handlePaletteMouseMove (e) {
@@ -278,6 +288,11 @@ function handleTEditButton (e) {
   tileEditorWindow.classList.remove('hidden');
 }
 
-function handleTileEditorCancel (e) {
+function handleTECancelButton (e) {
   tileEditorWindow.classList.add('hidden');
+}
+
+function handleTEGridButton (e) {
+  teGridOn = !teGridOn;
+  updateTileEditorGrid(tegcctx, teGridOn);
 }
