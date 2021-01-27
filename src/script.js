@@ -35,6 +35,12 @@ const cc = document.querySelector('#colordisplay');
 const cctx = cc.getContext('2d', { alpha: false });
 updateColors(cctx);
 
+const tec = document.querySelector('#tileeditor');
+const tecctx = tec.getContext('2d', { alpha: false });
+
+const tepc = document.querySelector('#tileeditorpalette');
+const tepcctx = tepc.getContext('2d', { alpha: false });
+
 // set up dom references
 const statusbar = document.querySelector('.statusbar p');
 const nTileGridButton = document.querySelector('#nTileGridButton');
@@ -42,6 +48,9 @@ const nAttrGridButton = document.querySelector('#nAttrGridButton');
 const tGridButton = document.querySelector('#tGridButton');
 const bankSelector = document.querySelectorAll('input[name="bank"]');
 const tilesetLabel = document.querySelector('.tileset .label');
+const tEditButton = document.querySelector('#tEditButton');
+const tileEditorWindow = document.querySelector('.tileeditbg');
+const tileEditorCancel = document.querySelector('#canceltile');
 
 // palettes
 const p0c = document.querySelector('#palette0');
@@ -96,6 +105,8 @@ p2c.addEventListener('click', handlePaletteClick);
 p3c.addEventListener('click', handlePaletteClick);
 cc.addEventListener('mousemove', handleCCMouseMove);
 cc.addEventListener('click', handleCCClick);
+tEditButton.addEventListener('click', handleTEditButton);
+tileEditorCancel.addEventListener('click', handleTileEditorCancel);
 
 ipcRenderer.on('CHR_OPEN', (event, args) => {
   console.log('got CHR_OPEN', event, args);
@@ -168,6 +179,12 @@ function handleTCClick (e) {
     currentTile = tileOffset;
   } else {
     currentTile = false;
+  }
+
+  if (currentTile !== false) {
+    tEditButton.disabled = false;
+  } else {
+    tEditButton.disabled = true;
   }
   updateTilesets(getTilesetProps());
 }
@@ -247,4 +264,20 @@ function handleNCClick (e) {
 
   currentNametable.data[tileOffset] = currentTile;
   currentNametable.update(nctx, tileOffset, tileset, palettes[currentPalette]);
+}
+
+function handleTEditButton (e) {
+  if (currentTile === false) { return; }
+
+  const editorPalette = new Palette(palettes[currentPalette].colors, tepcctx);
+  const tileToLoad = tileset.bank === 0 ? currentTile : currentTile + 256;
+
+  tileset.tiles[tileToLoad].draw(tecctx, 0, 0, editorPalette);
+  editorPalette.update();
+
+  tileEditorWindow.classList.remove('hidden');
+}
+
+function handleTileEditorCancel (e) {
+  tileEditorWindow.classList.add('hidden');
 }

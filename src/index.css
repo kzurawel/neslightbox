@@ -8,6 +8,10 @@ body {
   margin: 0;
 }
 
+button, label, input, canvas {
+  cursor: pointer;
+}
+
 .wrapper {
   position: absolute;
   top: 0;
@@ -45,6 +49,10 @@ body {
   width: 100%;
 }
 
+.nametabletools {
+  margin-top: 0.5rem;
+}
+
 .vwrap {
   border-left: 1px solid #888;
   display: flex;
@@ -56,7 +64,7 @@ body {
   height: 66%;
   margin: 0 auto;
   padding: 1rem 0;
-  width: 90%;
+  width: 88%;
 }
 
 .palettes {
@@ -67,6 +75,10 @@ body {
   margin: 0 auto;
   padding: 1rem 0 0;
   width: 90%;
+}
+
+.paletteswrapper .label {
+  margin-bottom: 12px;
 }
 
 .paletterow {
@@ -101,10 +113,21 @@ body {
   width: 100%;
 }
 
+.tilesettools {
+  display: flex;
+  flex-direction: horizontal;
+  justify-content: space-between;
+  margin: 0.5rem auto;
+}
+
+#tileeditorpalette {
+  border: 1px solid #888;
+}
+
 #colordisplay {
   border: 1px solid #888;
   display: block;
-  margin: 0 auto;
+  margin: 12px auto 0;
   width: 80%;
 }
 
@@ -126,4 +149,53 @@ body {
 .statusbar .spacer {
   display: inline-block;
   width: 1rem;
+}
+
+.tileeditbg {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(16, 16, 16, 0.65);
+}
+
+.tileeditbg.hidden {
+  display: none;
+}
+
+.tileedit {
+  background-color: #efefef;
+  padding: 1rem;
+  position: absolute;
+  left: 30%;
+  top: 4rem;
+  width: 40%;
+  height: auto;
+}
+
+.tileeditwrapper {
+  width: 100%;
+}
+
+.tileedittools {
+  display: flex;
+  flex-direction: horizontal;
+  justify-content: space-between;
+}
+
+.tileedittools div {
+  display: flex;
+}
+
+#tileeditorpalette, #canceltile {
+  margin-right: 4px;
+}
+
+#tileeditor {
+  border: 1px solid #888;
+  display: block;
+  image-rendering: pixelated;
+  width: 80%;
+  margin: 1rem auto;
 }

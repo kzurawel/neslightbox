@@ -1,6 +1,6 @@
 {
   "name": "neslightbox",
-  "productName": "neslightbox",
+  "productName": "NES Lightbox",
   "version": "0.1.0",
   "description": "My Electron application description",
   "main": "src/index.js",
@@ -16,7 +16,9 @@
   "license": "MIT",
   "config": {
     "forge": {
-      "packagerConfig": {},
+      "packagerConfig": {
+        "name": "NES Lightbox"
+      },
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",
