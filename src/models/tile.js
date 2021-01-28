@@ -60,3 +60,4 @@ Tile.prototype = {
 };
 
 exports.Tile = Tile;
+exports.BIT_PATTERNS = BIT_PATTERNS;

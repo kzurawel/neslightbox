@@ -80,6 +80,7 @@ const currentNametable = new Nametable(); // make mutable later
 let teGridOn = false;
 let teSelectedColor = 0;
 let editorPalette = false;
+let editorTile = false;
 
 // default palettes
 const palettes = [
@@ -286,8 +287,11 @@ function handleTEditButton (e) {
 
   editorPalette = new Palette(palettes[currentPalette].colors, tepcctx);
   const tileToLoad = tileset.bank === 0 ? currentTile : currentTile + 256;
+  const tile = tileset.tiles[tileToLoad];
 
-  tileset.tiles[tileToLoad].draw(tecctx, 0, 0, editorPalette);
+  editorTile = new Tile(tile.data);
+
+  editorTile.draw(tecctx, 0, 0, editorPalette);
   editorPalette.update(teSelectedColor);
 
   tileEditorWindow.classList.remove('hidden');
@@ -316,4 +320,15 @@ function handleTileEditorClick (e) {
 
   tecctx.fillStyle = COLORS[editorPalette.colors[teSelectedColor]];
   tecctx.fillRect(x, y, 1, 1);
+
+  switch (teSelectedColor) {
+    case 0:
+      break;
+    case 1:
+      break;
+    case 2:
+      break;
+    case 3:
+      break;
+  }
 }
