@@ -1,4 +1,5 @@
 const { ipcRenderer } = require('electron');
+const { COLORS } = require('./models/colors.js');
 const { Tileset } = require('./models/tileset.js');
 const { Palette } = require('./models/palette.js');
 const { Nametable } = require('./models/nametable.js');
@@ -77,6 +78,8 @@ let currentPalette = 0;
 let currentColorIndex = false;
 const currentNametable = new Nametable(); // make mutable later
 let teGridOn = false;
+let teSelectedColor = 0;
+let editorPalette = false;
 
 // default palettes
 const palettes = [
@@ -118,6 +121,8 @@ cc.addEventListener('click', handleCCClick);
 tEditButton.addEventListener('click', handleTEditButton);
 teCancelButton.addEventListener('click', handleTECancelButton);
 teGridButton.addEventListener('click', handleTEGridButton);
+tepc.addEventListener('click', handleTEPaletteClick);
+tegc.addEventListener('click', handleTileEditorClick);
 
 ipcRenderer.on('CHR_OPEN', (event, args) => {
   console.log('got CHR_OPEN', event, args);
@@ -279,11 +284,11 @@ function handleNCClick (e) {
 function handleTEditButton (e) {
   if (currentTile === false) { return; }
 
-  const editorPalette = new Palette(palettes[currentPalette].colors, tepcctx);
+  editorPalette = new Palette(palettes[currentPalette].colors, tepcctx);
   const tileToLoad = tileset.bank === 0 ? currentTile : currentTile + 256;
 
   tileset.tiles[tileToLoad].draw(tecctx, 0, 0, editorPalette);
-  editorPalette.update();
+  editorPalette.update(teSelectedColor);
 
   tileEditorWindow.classList.remove('hidden');
 }
@@ -295,4 +300,20 @@ function handleTECancelButton (e) {
 function handleTEGridButton (e) {
   teGridOn = !teGridOn;
   updateTileEditorGrid(tegcctx, teGridOn);
+}
+
+function handleTEPaletteClick (e) {
+  let colorIndex = Math.floor((e.offsetX / 96) * 4);
+  if (colorIndex > 3) { colorIndex = 3; }
+  teSelectedColor = colorIndex;
+
+  editorPalette.update(teSelectedColor);
+}
+
+function handleTileEditorClick (e) {
+  const x = Math.floor((e.offsetX / tegc.clientWidth) * 8);
+  const y = Math.floor((e.offsetY / tegc.clientHeight) * 8);
+
+  tecctx.fillStyle = COLORS[editorPalette.colors[teSelectedColor]];
+  tecctx.fillRect(x, y, 1, 1);
 }

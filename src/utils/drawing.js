@@ -71,7 +71,7 @@ function updateNametableGrid (options) {
 exports.updateNametableGrid = updateNametableGrid;
 
 function updateTilesets (options) {
-  const { context, tileset, selected, palette } = options;
+  const { context, tileset, palette } = options;
   context.fillStyle = COLORS[palette.colors[0]];
   context.fillRect(0, 0, 128, 128);
 
@@ -83,7 +83,6 @@ function updateTilesets (options) {
     const row = (i - col) / 16;
     tileset.tiles[startTile + i].draw(context, col * 8, row * 8, palette);
   }
-
 }
 exports.updateTilesets = updateTilesets;
 
