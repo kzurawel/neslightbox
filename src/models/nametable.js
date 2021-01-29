@@ -1,4 +1,5 @@
 const { COLORS } = require('./colors.js');
+// const { BIT_PATTERNS } = require('./tile.js');
 
 function Nametable () {
   this.data = new Uint8Array(960);
@@ -9,11 +10,11 @@ function Nametable () {
 
 Nametable.prototype = {
   draw: function (ctx, tileset, palettes) {
+    // TODO: draw with attr table
     ctx.fillStyle = COLORS[palettes[0].colors[0]];
     ctx.fillRect(0, 0, 256, 240);
     for (let i = 0; i < 960; i++) {
       const tile = tileset.bank === 0 ? this.data[i] : this.data[i] + 256;
-      if (tile === 0) { continue; }
       let x, y;
       if (i < 32) {
         x = i;
@@ -48,6 +49,7 @@ Nametable.prototype = {
     const tile = tileset.bank === 0 ? this.data[tileOffset] : this.data[tileOffset] + 256;
 
     tileset.tiles[tile].draw(ctx, x, y, palette);
+    // TODO: update attr table
   }
 };
 exports.Nametable = Nametable;

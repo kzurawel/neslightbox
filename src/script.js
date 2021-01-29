@@ -1,6 +1,7 @@
 const { ipcRenderer } = require('electron');
 const { COLORS } = require('./models/colors.js');
 const { Tileset } = require('./models/tileset.js');
+const { Tile, BIT_PATTERNS } = require('./models/tile.js');
 const { Palette } = require('./models/palette.js');
 const { Nametable } = require('./models/nametable.js');
 const {
@@ -61,6 +62,7 @@ const tEditButton = document.querySelector('#tEditButton');
 const tileEditorWindow = document.querySelector('.tileeditbg');
 const teGridButton = document.querySelector('#teGridButton');
 const teCancelButton = document.querySelector('#teCancelButton');
+const teSaveButton = document.querySelector('#teSaveButton');
 
 // palettes
 const p0c = document.querySelector('#palette0');
@@ -122,6 +124,7 @@ cc.addEventListener('click', handleCCClick);
 tEditButton.addEventListener('click', handleTEditButton);
 teCancelButton.addEventListener('click', handleTECancelButton);
 teGridButton.addEventListener('click', handleTEGridButton);
+teSaveButton.addEventListener('click', handleTESaveButton);
 tepc.addEventListener('click', handleTEPaletteClick);
 tegc.addEventListener('click', handleTileEditorClick);
 
@@ -183,6 +186,8 @@ function handleBankSelector (value) {
   tileset.bank = parseInt(value, 10);
   currentTile = false;
   updateTilesets(getTilesetProps());
+  updateTilesetGrid(tgcctx, tGridOn, currentTile);
+  currentNametable.draw(nctx, tileset, palettes);
 }
 
 function handleTCClick (e) {
@@ -323,12 +328,30 @@ function handleTileEditorClick (e) {
 
   switch (teSelectedColor) {
     case 0:
+      // turn off both bits
+      editorTile.data[y] &= BIT_PATTERNS[`${x}Off`];
+      editorTile.data[y + 8] &= BIT_PATTERNS[`${x}Off`];
       break;
     case 1:
+      // turn on first, off second
+      editorTile.data[y] |= BIT_PATTERNS[x];
+      editorTile.data[y + 8] &= BIT_PATTERNS[`${x}Off`];
       break;
     case 2:
+      // turn off first, on second
+      editorTile.data[y] &= BIT_PATTERNS[`${x}Off`];
+      editorTile.data[y + 8] |= BIT_PATTERNS[x];
       break;
     case 3:
-      break;
+      // turn both on
+      editorTile.data[y] |= BIT_PATTERNS[x];
+      editorTile.data[y + 8] |= BIT_PATTERNS[x];
   }
+}
+
+function handleTESaveButton (e) {
+  tileset.updateTile(currentTile, editorTile);
+  updateTilesets(getTilesetProps());
+  updateTilesetGrid(tgcctx, tGridOn, currentTile);
+  tileEditorWindow.classList.add('hidden');
 }

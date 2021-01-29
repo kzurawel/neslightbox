@@ -26,6 +26,14 @@ Tileset.prototype = {
     } else {
       throw new Error(`Unsupported CHR size: ${buffer.length}`);
     }
+  },
+  updateTile: function (offset, tile) {
+    const tileOffset = this.bank === 0 ? offset : offset + 256;
+
+    for (let i = 0; i < 16; i++) {
+      this.tiles[tileOffset].data[i] = tile.data[i];
+      this.rawData[(tileOffset * 16) + i] = tile.data[i];
+    }
   }
 };
 
