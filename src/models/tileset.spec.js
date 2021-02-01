@@ -1,5 +1,7 @@
 /* global test, expect */
 const { Tileset } = require('./tileset.js');
+const electron = require('electron'); // eslint-disable-line no-unused-vars
+const { ipcRenderer } = require('electron'); // eslint-disable-line no-unused-vars
 
 test('constructor with no args', () => {
   const t = new Tileset();

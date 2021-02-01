@@ -65,11 +65,58 @@ function onOpenChr (item, focusedWindow) {
 exports.onOpenChr = onOpenChr;
 
 function onSaveChrAs (item, focusedWindow) {
-
+  dialog.showSaveDialog(focusedWindow, {
+    title: 'Save CHR file',
+    properties: ['createDirectory'],
+    filters: [
+      { name: 'CHR files', extensions: ['chr'] },
+      { name: 'All files', extensions: ['*'] }
+    ]
+  }).then((fileObj) => {
+    if (!fileObj.canceled) {
+      let filenameParts = fileObj.filePath.split('/');
+      filenameParts = filenameParts[filenameParts.length - 1].split('\\');
+      const filename = filenameParts[filenameParts.length - 1];
+      focusedWindow.webContents.send('CHR_SAVE_AS', {
+        file: fileObj,
+        filename: filename
+      });
+    }
+  }).catch((e) => {
+    console.error(e);
+  });
 }
 exports.onSaveChrAs = onSaveChrAs;
 
 function onSaveChr (item, focusedWindow) {
-
+  dialog.showMessageBox(focusedWindow, {
+    type: 'warning',
+    title: 'Overwrite CHR file?',
+    message: 'This will overwrite the existing CHR file. This action cannot be undone. Do you want to proceed?',
+    buttons: ['Save', 'Cancel'],
+    cancelId: 1,
+    defaultId: 0
+  }).then((res) => {
+    if (res.response === 0) {
+      focusedWindow.webContents.send('CHR_SAVE');
+    }
+  }).catch((e) => {
+    console.error(e);
+  });
 }
 exports.onSaveChr = onSaveChr;
+
+function onOpenPalettes (item, focusedWindow) {
+
+}
+exports.onOpenPalettes = onOpenPalettes;
+
+function onSavePalettesAs (item, focusedWindow) {
+
+}
+exports.onSavePalettesAs = onSavePalettesAs;
+
+function onSavePalettes (item, focusedWindow) {
+
+}
+exports.onSavePalettes = onSavePalettes;

@@ -37,19 +37,19 @@ const template = [
       }
     ]
   },
-  {
-    label: 'Optimizations',
-    submenu: [
-      {
-        label: 'Remove Duplicates',
-        click: menuFns.onRemoveDuplicates
-      },
-      {
-        label: 'Remove Unused',
-        click: menuFns.onRemoveUnused
-      }
-    ]
-  },
+  // {
+  //   label: 'Optimizations',
+  //   submenu: [
+  //     {
+  //       label: 'Remove Duplicates',
+  //       click: menuFns.onRemoveDuplicates
+  //     },
+  //     {
+  //       label: 'Remove Unused',
+  //       click: menuFns.onRemoveUnused
+  //     }
+  //   ]
+  // },
   {
     label: 'Nametables',
     submenu: [
@@ -62,8 +62,9 @@ const template = [
         click: menuFns.onSaveNametableAs
       },
       {
-        label: 'Save All Nametables',
-        click: menuFns.onSaveAllNametables
+        label: 'Save Nametable',
+        click: menuFns.onSaveAllNametables,
+        id: 'saveNametable'
       }
     ]
   },
@@ -80,7 +81,8 @@ const template = [
       },
       {
         label: 'Save CHR',
-        click: menuFns.onSaveChr
+        click: menuFns.onSaveChr,
+        id: 'saveCHR'
       }
     ]
   },
@@ -88,22 +90,16 @@ const template = [
     label: 'Palettes',
     submenu: [
       {
-        label: 'Background',
-        submenu: [
-          {
-            label: 'Open Background Palettes...',
-            click: menuFns.onOpenBackgroundPalettes
-          }
-        ]
+        label: 'Open Palettes...',
+        click: menuFns.onOpenPalettes
       },
       {
-        label: 'Sprite',
-        submenu: [
-          {
-            label: 'Open Sprite Palettes...',
-            click: menuFns.onOpenSpritePalettes
-          }
-        ]
+        label: 'Save Palettes As...',
+        click: menuFns.onSavePalettesAs
+      },
+      {
+        label: 'Save Palettes',
+        click: menuFns.onSavePalettes
       }
     ]
   },

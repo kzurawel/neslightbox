@@ -84,6 +84,9 @@ let teSelectedColor = 0;
 let editorPalette = false;
 let editorTile = false;
 
+// turn off Save button if no current file
+ipcRenderer.send('ALLOW_CHR_SAVE', false);
+
 // default palettes
 const palettes = [
   new Palette(['0d', '00', '10', '20'], p0c.getContext('2d', { alpha: false })),
@@ -133,6 +136,16 @@ ipcRenderer.on('CHR_OPEN', (event, args) => {
   tileset.load(args.data, args.path, args.file);
   tilesetLabel.innerHTML = tileset.filename;
   updateTilesets(getTilesetProps());
+});
+
+ipcRenderer.on('CHR_SAVE_AS', (event, args) => {
+  console.log('got CHR_SAVE_AS', event, args);
+  tileset.save(args.file.filePath);
+});
+
+ipcRenderer.on('CHR_SAVE', (event, args) => {
+  console.log('got CHR_SAVE', event, args);
+  tileset.save(tileset.filepath);
 });
 
 // implementing functions

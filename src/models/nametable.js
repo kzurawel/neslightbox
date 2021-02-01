@@ -52,4 +52,35 @@ Nametable.prototype = {
     // TODO: update attr table
   }
 };
+
+function getAttrByte (x, y) {
+  const attrFineRow = y % 4;
+  const attrFineCol = x % 4;
+  const attrRow = (y - attrFineRow) / 4;
+  const attrCol = (x - attrFineCol) / 4;
+
+  return (attrRow * 8) + attrCol;
+}
+
+function getAttrByteIndex (x, y) {
+  const attrFineRow = y % 4;
+  const attrFineCol = x % 4;
+
+  if (attrFineRow < 2) {
+    if (attrFineCol < 2) {
+      // top left
+    } else {
+      // top right
+    }
+  } else {
+    if (attrFineCol < 2) {
+      // bottom left
+    } else {
+      // bottom right
+    }
+  }
+}
+
 exports.Nametable = Nametable;
+exports.getAttrByte = getAttrByte;
+exports.getAttrByteIndex = getAttrByteIndex;

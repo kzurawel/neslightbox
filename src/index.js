@@ -1,4 +1,4 @@
-const { app } = require('electron');
+const { app, ipcMain, Menu } = require('electron');
 const RatioWindow = require('./utils/ratiowindow.js');
 const path = require('path');
 
@@ -30,6 +30,10 @@ app.on('ready', createWindow);
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', app.quit);
+
+ipcMain.on('ALLOW_CHR_SAVE', (e, allow) => {
+  Menu.getApplicationMenu().getMenuItemById('saveCHR').enabled = allow;
+});
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.

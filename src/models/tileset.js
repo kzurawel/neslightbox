@@ -1,4 +1,6 @@
 const { Tile } = require('./tile.js');
+const fs = require('fs');
+const { ipcRenderer } = require('electron');
 
 function Tileset () {
   this.rawData = new Uint8Array(8192);
@@ -23,6 +25,7 @@ Tileset.prototype = {
       for (let i = 0; i < 512; i++) {
         this.tiles[i] = new Tile(buffer.slice(i * 16, (i * 16) + 16));
       }
+      ipcRenderer.send('ALLOW_CHR_SAVE', true);
     } else {
       throw new Error(`Unsupported CHR size: ${buffer.length}`);
     }
@@ -34,6 +37,12 @@ Tileset.prototype = {
       this.tiles[tileOffset].data[i] = tile.data[i];
       this.rawData[(tileOffset * 16) + i] = tile.data[i];
     }
+  },
+  save: function (path) {
+    const buffer = Buffer.from(this.rawData);
+    fs.writeFile(path, buffer, (err) => {
+      if (err) { console.error(err); }
+    });
   }
 };
 
