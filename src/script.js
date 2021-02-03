@@ -1,7 +1,8 @@
 const { ipcRenderer } = require('electron');
 const { COLORS } = require('./models/colors.js');
+const { bit } = require('./utils/bitFns.js');
 const { Tileset } = require('./models/tileset.js');
-const { Tile, BIT_PATTERNS } = require('./models/tile.js');
+const { Tile } = require('./models/tile.js');
 const { Palette } = require('./models/palette.js');
 const { Nametable } = require('./models/nametable.js');
 const {
@@ -78,7 +79,7 @@ const tileset = new Tileset();
 let currentTile = false;
 let currentPalette = 0;
 let currentColorIndex = false;
-const currentNametable = new Nametable(); // make mutable later
+const currentNametable = new Nametable(); // make mutable later?
 let teGridOn = false;
 let teSelectedColor = 0;
 let editorPalette = false;
@@ -342,23 +343,23 @@ function handleTileEditorClick (e) {
   switch (teSelectedColor) {
     case 0:
       // turn off both bits
-      editorTile.data[y] &= BIT_PATTERNS[`${x}Off`];
-      editorTile.data[y + 8] &= BIT_PATTERNS[`${x}Off`];
+      editorTile.data[y] = bit.off(editorTile.data[y], x);
+      editorTile.data[y + 8] = bit.off(editorTile.data[y + 8], x);
       break;
     case 1:
       // turn on first, off second
-      editorTile.data[y] |= BIT_PATTERNS[x];
-      editorTile.data[y + 8] &= BIT_PATTERNS[`${x}Off`];
+      editorTile.data[y] = bit.on(editorTile.data[y], x);
+      editorTile.data[y + 8] = bit.off(editorTile.data[y + 8], x);
       break;
     case 2:
       // turn off first, on second
-      editorTile.data[y] &= BIT_PATTERNS[`${x}Off`];
-      editorTile.data[y + 8] |= BIT_PATTERNS[x];
+      editorTile.data[y] = bit.off(editorTile.data[y], x);
+      editorTile.data[y + 8] = bit.on(editorTile.data[y + 8], x);
       break;
     case 3:
       // turn both on
-      editorTile.data[y] |= BIT_PATTERNS[x];
-      editorTile.data[y + 8] |= BIT_PATTERNS[x];
+      editorTile.data[y] = bit.on(editorTile.data[y], x);
+      editorTile.data[y + 8] = bit.on(editorTile.data[y + 8], x);
   }
 }
 

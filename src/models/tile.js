@@ -1,24 +1,5 @@
 const { COLORS } = require('./colors.js');
-
-// these patterns are high-to-low, not low-to-high
-const BIT_PATTERNS = {
-  0: '0b10000000',
-  1: '0b01000000',
-  2: '0b00100000',
-  3: '0b00010000',
-  4: '0b00001000',
-  5: '0b00000100',
-  6: '0b00000010',
-  7: '0b00000001',
-  '0Off': '0b01111111',
-  '1Off': '0b10111111',
-  '2Off': '0b11011111',
-  '3Off': '0b11101111',
-  '4Off': '0b11110111',
-  '5Off': '0b11111011',
-  '6Off': '0b11111101',
-  '7Off': '0b11111110'
-};
+const { BIT_PATTERNS } = require('../utils/bitFns.js');
 
 function Tile (buffer) {
   if (buffer && buffer.length === 16) {
@@ -68,4 +49,3 @@ Tile.prototype = {
 };
 
 exports.Tile = Tile;
-exports.BIT_PATTERNS = BIT_PATTERNS;

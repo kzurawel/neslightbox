@@ -1,5 +1,4 @@
 const { COLORS } = require('./colors.js');
-// const { BIT_PATTERNS } = require('./tile.js');
 
 function Nametable () {
   this.data = new Uint8Array(960);
