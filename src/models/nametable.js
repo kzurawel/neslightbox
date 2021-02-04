@@ -9,6 +9,26 @@ function Nametable () {
 }
 
 Nametable.prototype = {
+  load: function (buffer, filepath, filename) {
+    if (buffer.length === 1024 || buffer.length === 960) {
+      this.filepath = filepath;
+      this.filename = filename;
+      for (let i = 0; i < 960; i++) {
+        this.data[i] = buffer[i];
+      }
+
+      if (buffer.length === 1024) {
+        for (let i = 960; i < 1024; i++) {
+          this.attrs[i] = buffer[i];
+        }
+      }
+
+      ipcRenderer.send('ALLOW_NAMETABLE_SAVE', true);
+    } else {
+      throw new Error(`Unsupported nametable size: ${buffer.length}`);
+    }
+  },
+
   draw: function (ctx, tileset, palettes) {
     ctx.fillStyle = COLORS[palettes[0].colors[0]];
     ctx.fillRect(0, 0, 256, 240);

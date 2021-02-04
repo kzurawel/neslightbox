@@ -63,7 +63,7 @@ const template = [
       },
       {
         label: 'Save Nametable',
-        click: menuFns.onSaveAllNametables,
+        click: menuFns.onSaveNametable,
         id: 'saveNametable'
       }
     ]

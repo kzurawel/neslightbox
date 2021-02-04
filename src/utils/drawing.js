@@ -113,7 +113,7 @@ function updateTilesetGrid (context, grid, selected) {
     const sy = row * 16;
 
     context.strokeStyle = '#ff0';
-    context.lineWidth = 2;
+    context.lineWidth = 4;
     context.strokeRect(sx, sy, 16, 16);
   }
 }

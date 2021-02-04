@@ -22,19 +22,74 @@ function onRemoveUnused (item, focusedWindow) {
 exports.onRemoveUnused = onRemoveUnused;
 
 function onOpenNametable (item, focusedWindow) {
-
+  dialog.showOpenDialog(focusedWindow, {
+    title: 'Open a nametable',
+    properties: ['openFile'],
+    filters: [
+      { name: 'Nametable files', extensions: ['nam'] },
+      { name: 'All files', extensions: ['*'] }
+    ]
+  }).then((fileObj) => {
+    if (!fileObj.canceled) {
+      fs.readFile(fileObj.filePaths[0], (err, fileData) => {
+        if (err) { throw new Error(err); }
+        let filenameParts = fileObj.filePaths[0].split('/');
+        filenameParts = filenameParts[filenameParts.length - 1].split('\\');
+        const filename = filenameParts[filenameParts.length - 1];
+        focusedWindow.webContents.send('NAMETABLE_OPEN', {
+          data: Buffer.from(fileData),
+          path: fileObj.filePaths[0],
+          file: filename
+        });
+      });
+    }
+  }).catch((e) => {
+    console.error(e);
+  });
 }
 exports.onOpenNametable = onOpenNametable;
 
 function onSaveNametableAs (item, focusedWindow) {
-
+  dialog.showSaveDialog(focusedWindow, {
+    title: 'Save nametable',
+    properties: ['createDirectory'],
+    filters: [
+      { name: 'Nametable files', extensions: ['nam'] },
+      { name: 'All files', extensions: ['*'] }
+    ]
+  }).then((fileObj) => {
+    if (!fileObj.canceled) {
+      let filenameParts = fileObj.filePath.split('/');
+      filenameParts = filenameParts[filenameParts.length - 1].split('\\');
+      const filename = filenameParts[filenameParts.length - 1];
+      focusedWindow.webContents.send('NAMETABLE_SAVE_AS', {
+        file: fileObj,
+        filename: filename
+      });
+    }
+  }).catch((e) => {
+    console.error(e);
+  });
 }
 exports.onSaveNametableAs = onSaveNametableAs;
 
-function onSaveAllNametables (item, focusedWindow) {
-
+function onSaveNametable (item, focusedWindow) {
+  dialog.showMessageBox(focusedWindow, {
+    type: 'warning',
+    title: 'Overwrite nametable?',
+    message: 'This will overwrite the existing nametable file. This action cannot be undone. Do you want to proceed?',
+    buttons: ['Save', 'Cancel'],
+    cancelId: 1,
+    defaultId: 0
+  }).then((res) => {
+    if (res.response === 0) {
+      focusedWindow.webContents.send('NAMETABLE_SAVE');
+    }
+  }).catch((e) => {
+    console.error(e);
+  });
 }
-exports.onSaveAllNametables = onSaveAllNametables;
+exports.onSaveNametable = onSaveNametable;
 
 function onOpenChr (item, focusedWindow) {
   dialog.showOpenDialog(focusedWindow, {

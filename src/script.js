@@ -87,6 +87,7 @@ let editorTile = false;
 
 // turn off Save button if no current file
 ipcRenderer.send('ALLOW_CHR_SAVE', false);
+ipcRenderer.send('ALLOW_NAMETABLE_SAVE', false);
 
 // default palettes
 const palettes = [
@@ -147,6 +148,12 @@ ipcRenderer.on('CHR_SAVE_AS', (event, args) => {
 ipcRenderer.on('CHR_SAVE', (event, args) => {
   console.log('got CHR_SAVE', event, args);
   tileset.save(tileset.filepath);
+});
+
+ipcRenderer.on('NAMETABLE_OPEN', (event, args) => {
+  console.log('got NAMETABLE_OPEN', event, args);
+  currentNametable.load(args.data, args.path, args.file);
+  currentNametable.draw(nctx, tileset, palettes);
 });
 
 // implementing functions

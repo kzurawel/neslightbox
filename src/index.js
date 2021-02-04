@@ -34,6 +34,9 @@ app.on('window-all-closed', app.quit);
 ipcMain.on('ALLOW_CHR_SAVE', (e, allow) => {
   Menu.getApplicationMenu().getMenuItemById('saveCHR').enabled = allow;
 });
+ipcMain.on('ALLOW_NAMETABLE_SAVE', (e, allow) => {
+  Menu.getApplicationMenu().getMenuItemById('saveNametable').enabled = allow;
+});
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
