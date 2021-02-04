@@ -31,6 +31,17 @@ function off (byte, bit) {
 }
 exports.off = off;
 
+function get (byte, bit) {
+  let result;
+  if ((byte & BIT_PATTERNS[bit]) === 0) {
+    result = 0;
+  } else {
+    result = 1;
+  }
+  return result;
+}
+exports.get = get;
+
 // Swap given bit of a byte to its opposite
 function toggle (byte, bit) {
   if (byte & BIT_PATTERNS[bit] > 0) {

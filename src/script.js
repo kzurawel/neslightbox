@@ -1,6 +1,6 @@
 const { ipcRenderer } = require('electron');
 const { COLORS } = require('./models/colors.js');
-const { bit } = require('./utils/bitFns.js');
+const bit = require('./utils/bitFns.js');
 const { Tileset } = require('./models/tileset.js');
 const { Tile } = require('./models/tile.js');
 const { Palette } = require('./models/palette.js');
@@ -90,10 +90,10 @@ ipcRenderer.send('ALLOW_CHR_SAVE', false);
 
 // default palettes
 const palettes = [
-  new Palette(['0d', '00', '10', '20'], p0c.getContext('2d', { alpha: false })),
-  new Palette(['0d', '01', '11', '21'], p1c.getContext('2d', { alpha: false })),
-  new Palette(['0d', '06', '16', '26'], p2c.getContext('2d', { alpha: false })),
-  new Palette(['0d', '09', '19', '29'], p3c.getContext('2d', { alpha: false }))
+  new Palette(['0d', '00', '10', '20'], p0c.getContext('2d', { alpha: false }), 0),
+  new Palette(['0d', '01', '11', '21'], p1c.getContext('2d', { alpha: false }), 1),
+  new Palette(['0d', '06', '16', '26'], p2c.getContext('2d', { alpha: false }), 2),
+  new Palette(['0d', '09', '19', '29'], p3c.getContext('2d', { alpha: false }), 3)
 ];
 
 palettes.forEach((palette) => {
@@ -297,8 +297,8 @@ function handleNCClick (e) {
   const y = Math.floor((e.offsetY / nc.clientHeight) * 480);
   const tileOffset = convertNCToTileOffset(x, y);
 
-  currentNametable.data[tileOffset] = currentTile;
-  currentNametable.update(nctx, tileOffset, tileset, palettes[currentPalette]);
+  currentNametable.update(currentTile, tileOffset, palettes[currentPalette]);
+  currentNametable.draw(nctx, tileset, palettes);
 }
 
 function handleTEditButton (e) {

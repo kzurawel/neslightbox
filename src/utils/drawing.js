@@ -15,7 +15,7 @@ function updateNametableGrid (options) {
   if (tileGrid) {
     // vertical lines
     for (let i = 0; i < 512; i = i + 16) {
-      if (i % 32 === 0 && attrGrid) {
+      if (i % 64 === 0 && attrGrid) {
         ctx.strokeStyle = '#f66';
         ctx.setLineDash([8, 8]);
       } else {
@@ -31,7 +31,7 @@ function updateNametableGrid (options) {
 
     // horizontal lines
     for (let j = 0; j < 480; j = j + 16) {
-      if (j % 32 === 0 && attrGrid) {
+      if (j % 64 === 0 && attrGrid) {
         ctx.strokeStyle = '#f66';
         ctx.setLineDash([8, 8]);
       } else {
@@ -91,7 +91,6 @@ function updateTilesetGrid (context, grid, selected) {
   if (grid) {
     context.strokeStyle = '#fff';
     context.lineWidth = 1;
-    context.setLineDash([1, 7]);
     for (let i = 0; i < 256; i = i + 16) {
       context.beginPath();
       context.moveTo(i + 0.5, 0.5);
@@ -115,7 +114,6 @@ function updateTilesetGrid (context, grid, selected) {
 
     context.strokeStyle = '#ff0';
     context.lineWidth = 2;
-    context.setLineDash([]);
     context.strokeRect(sx, sy, 16, 16);
   }
 }

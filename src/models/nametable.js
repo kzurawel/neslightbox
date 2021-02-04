@@ -1,4 +1,5 @@
 const { COLORS } = require('./colors.js');
+const bit = require('../utils/bitFns.js');
 
 function Nametable () {
   this.data = new Uint8Array(960);
@@ -9,7 +10,6 @@ function Nametable () {
 
 Nametable.prototype = {
   draw: function (ctx, tileset, palettes) {
-    // TODO: draw with attr table
     ctx.fillStyle = COLORS[palettes[0].colors[0]];
     ctx.fillRect(0, 0, 256, 240);
     for (let i = 0; i < 960; i++) {
@@ -22,14 +22,19 @@ Nametable.prototype = {
         x = i % 32;
         y = (i - x) / 32;
       }
+
+      const attrByte = getAttrByte(x, y);
+      const attrQuadrant = getAttrByteQuadrant(x, y);
+      const paletteIndex = getAttrPalette(this.attrs[attrByte], attrQuadrant);
+
       x = x * 8;
       y = y * 8;
 
-      tileset.tiles[tile].draw(ctx, x, y, palettes[1]);
+      tileset.tiles[tile].draw(ctx, x, y, palettes[paletteIndex]);
     }
   },
 
-  update: function (ctx, tileOffset, tileset, palette) {
+  update: function (tile, tileOffset, palette) {
     let x, y;
     if (tileOffset < 32) {
       x = tileOffset;
@@ -39,16 +44,34 @@ Nametable.prototype = {
       y = (tileOffset - x) / 32;
     }
 
-    x = x * 8;
-    y = y * 8;
+    this.data[tileOffset] = tile;
 
-    ctx.fillStyle = COLORS[palette.colors[0]];
-    ctx.fillRect(x, y, 8, 8);
+    const attrByte = getAttrByte(x, y);
+    const attrQuadrant = getAttrByteQuadrant(x, y);
+    this.setAttrByteQuadrant(attrByte, attrQuadrant, palette.index);
+  },
 
-    const tile = tileset.bank === 0 ? this.data[tileOffset] : this.data[tileOffset] + 256;
-
-    tileset.tiles[tile].draw(ctx, x, y, palette);
-    // TODO: update attr table
+  setAttrByteQuadrant: function (byte, quadrant, index) {
+    let newByte = this.attrs[byte];
+    switch (index) {
+      case 0:
+        newByte = bit.off(newByte, quadrant);
+        newByte = bit.off(newByte, quadrant + 1);
+        break;
+      case 1:
+        newByte = bit.off(newByte, quadrant);
+        newByte = bit.on(newByte, quadrant + 1);
+        break;
+      case 2:
+        newByte = bit.on(newByte, quadrant);
+        newByte = bit.off(newByte, quadrant + 1);
+        break;
+      case 3:
+        newByte = bit.on(newByte, quadrant);
+        newByte = bit.on(newByte, quadrant + 1);
+        break;
+    }
+    this.attrs[byte] = newByte;
   }
 };
 
@@ -61,25 +84,41 @@ function getAttrByte (x, y) {
   return (attrRow * 8) + attrCol;
 }
 
-function getAttrByteIndex (x, y) {
+// return starting bit (0 = highest bit) of
+// the attribute byte for this position's palette
+function getAttrByteQuadrant (x, y) {
   const attrFineRow = y % 4;
   const attrFineCol = x % 4;
 
   if (attrFineRow < 2) {
     if (attrFineCol < 2) {
       // top left
+      return 6;
     } else {
       // top right
+      return 4;
     }
   } else {
     if (attrFineCol < 2) {
       // bottom left
+      return 2;
     } else {
       // bottom right
+      return 0;
     }
   }
 }
 
+// return palette index (0-3) for a given quadrant
+// of an attr table byte
+function getAttrPalette (byte, quadrant) {
+  const highBit = bit.get(byte, quadrant);
+  const lowBit = bit.get(byte, quadrant + 1);
+  const binaryString = `${highBit}${lowBit}`;
+
+  return parseInt(binaryString, 2);
+}
+
 exports.Nametable = Nametable;
 exports.getAttrByte = getAttrByte;
-exports.getAttrByteIndex = getAttrByteIndex;
+exports.getAttrByteQuadrant = getAttrByteQuadrant;

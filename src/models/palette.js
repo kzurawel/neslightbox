@@ -1,5 +1,5 @@
 const { COLORS } = require('./colors.js');
-function Palette (colors, context) {
+function Palette (colors, context, index) {
   if (colors && colors.length === 4) {
     this.colors = colors;
     this.context = context;
@@ -7,6 +7,7 @@ function Palette (colors, context) {
     this.colors = [];
     this.context = false;
   }
+  this.index = index;
 }
 
 Palette.prototype = {
