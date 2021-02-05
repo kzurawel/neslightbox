@@ -1,5 +1,7 @@
+const { ipcRenderer } = require('electron');
 const { COLORS } = require('./colors.js');
 const bit = require('../utils/bitFns.js');
+const fs = require('fs');
 
 function Nametable () {
   this.data = new Uint8Array(960);
@@ -18,8 +20,8 @@ Nametable.prototype = {
       }
 
       if (buffer.length === 1024) {
-        for (let i = 960; i < 1024; i++) {
-          this.attrs[i] = buffer[i];
+        for (let i = 960, j = 0; i < 1024; i++, j++) {
+          this.attrs[j] = buffer[i];
         }
       }
 
@@ -27,6 +29,21 @@ Nametable.prototype = {
     } else {
       throw new Error(`Unsupported nametable size: ${buffer.length}`);
     }
+  },
+
+  save: function (filepath) {
+    const buffer = Buffer.alloc(1024);
+    for (let i = 0; i < 960; i++) {
+      buffer[i] = this.data[i];
+    }
+
+    for (let i = 960, j = 0; i < 1024; i++, j++) {
+      buffer[i] = this.attrs[j];
+    }
+
+    fs.writeFile(filepath, buffer, (err) => {
+      if (err) { console.error(err); }
+    });
   },
 
   draw: function (ctx, tileset, palettes) {

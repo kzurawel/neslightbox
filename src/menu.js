@@ -24,7 +24,7 @@ const template = [
     : []),
   // { role: 'fileMenu' }
   {
-    label: 'File',
+    label: 'Project',
     submenu: [
       isMac ? { role: 'separator', visible: false } : { role: 'quit' },
       {
@@ -34,6 +34,11 @@ const template = [
       {
         label: 'Save Project As...',
         click: menuFns.onSaveProjectAs
+      },
+      {
+        label: 'Save All Project Files',
+        click: menuFns.onSaveProject,
+        id: 'saveProject'
       }
     ]
   },
@@ -99,7 +104,8 @@ const template = [
       },
       {
         label: 'Save Palettes',
-        click: menuFns.onSavePalettes
+        click: menuFns.onSavePalettes,
+        id: 'savePalettes'
       }
     ]
   },
@@ -108,7 +114,6 @@ const template = [
     label: 'View',
     submenu: [
       { role: 'reload' },
-      { role: 'forceReload' },
       { role: 'toggleDevTools' },
       { type: 'separator' },
       { role: 'resetZoom' },

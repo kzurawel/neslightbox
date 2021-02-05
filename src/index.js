@@ -31,11 +31,18 @@ app.on('ready', createWindow);
 // explicitly with Cmd + Q.
 app.on('window-all-closed', app.quit);
 
+// Disable save (not save as) when no file is loaded
 ipcMain.on('ALLOW_CHR_SAVE', (e, allow) => {
   Menu.getApplicationMenu().getMenuItemById('saveCHR').enabled = allow;
 });
 ipcMain.on('ALLOW_NAMETABLE_SAVE', (e, allow) => {
   Menu.getApplicationMenu().getMenuItemById('saveNametable').enabled = allow;
+});
+ipcMain.on('ALLOW_PALETTES_SAVE', (e, allow) => {
+  Menu.getApplicationMenu().getMenuItemById('savePalettes').enabled = allow;
+});
+ipcMain.on('ALLOW_PROJECT_SAVE', (e, allow) => {
+  Menu.getApplicationMenu().getMenuItemById('saveProject').enabled = allow;
 });
 
 // In this file you can include the rest of your app's specific main process

@@ -162,16 +162,71 @@ function onSaveChr (item, focusedWindow) {
 exports.onSaveChr = onSaveChr;
 
 function onOpenPalettes (item, focusedWindow) {
-
+  dialog.showOpenDialog(focusedWindow, {
+    title: 'Open a palettes file',
+    properties: ['openFile'],
+    filters: [
+      { name: 'Palette files', extensions: ['pal'] },
+      { name: 'All files', extensions: ['*'] }
+    ]
+  }).then((fileObj) => {
+    if (!fileObj.canceled) {
+      fs.readFile(fileObj.filePaths[0], (err, fileData) => {
+        if (err) { throw new Error(err); }
+        let filenameParts = fileObj.filePaths[0].split('/');
+        filenameParts = filenameParts[filenameParts.length - 1].split('\\');
+        const filename = filenameParts[filenameParts.length - 1];
+        focusedWindow.webContents.send('PALETTES_OPEN', {
+          data: Buffer.from(fileData),
+          path: fileObj.filePaths[0],
+          file: filename
+        });
+      });
+    }
+  }).catch((e) => {
+    console.error(e);
+  });
 }
 exports.onOpenPalettes = onOpenPalettes;
 
 function onSavePalettesAs (item, focusedWindow) {
-
+  dialog.showSaveDialog(focusedWindow, {
+    title: 'Save palettes file',
+    properties: ['createDirectory'],
+    filters: [
+      { name: 'Palette files', extensions: ['pal'] },
+      { name: 'All files', extensions: ['*'] }
+    ]
+  }).then((fileObj) => {
+    if (!fileObj.canceled) {
+      let filenameParts = fileObj.filePath.split('/');
+      filenameParts = filenameParts[filenameParts.length - 1].split('\\');
+      const filename = filenameParts[filenameParts.length - 1];
+      focusedWindow.webContents.send('PALETTES_SAVE_AS', {
+        file: fileObj,
+        filename: filename
+      });
+    }
+  }).catch((e) => {
+    console.error(e);
+  });
 }
 exports.onSavePalettesAs = onSavePalettesAs;
 
 function onSavePalettes (item, focusedWindow) {
-
+  dialog.showMessageBox(focusedWindow, {
+    type: 'warning',
+    title: 'Overwrite palettes file?',
+    message: 'This will overwrite the existing palettes file. This action cannot be undone. Do you want to proceed?',
+    buttons: ['Save', 'Cancel'],
+    cancelId: 1,
+    defaultId: 0
+  }).then((res) => {
+    if (res.response === 0) {
+      focusedWindow.webContents.send('PALETTES_SAVE');
+    }
+  }).catch((e) => {
+    console.error(e);
+  });
 }
 exports.onSavePalettes = onSavePalettes;

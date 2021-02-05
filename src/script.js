@@ -1,3 +1,4 @@
+const fs = require('fs');
 const { ipcRenderer } = require('electron');
 const { COLORS } = require('./models/colors.js');
 const bit = require('./utils/bitFns.js');
@@ -10,7 +11,8 @@ const {
   nametableStatusBar,
   convertTCToTileOffset,
   tilesetStatusBar,
-  convertCCToColor
+  convertCCToColor,
+  hexDisplay
 } = require('./utils/tilemapping.js');
 const {
   updateNametableGrid,
@@ -64,6 +66,9 @@ const tileEditorWindow = document.querySelector('.tileeditbg');
 const teGridButton = document.querySelector('#teGridButton');
 const teCancelButton = document.querySelector('#teCancelButton');
 const teSaveButton = document.querySelector('#teSaveButton');
+const palettesLabel = document.querySelector('.paletteswrapper .label');
+const nametableLabel = document.querySelector('.nametable .label');
+const windowTitle = document.querySelector('head title');
 
 // palettes
 const p0c = document.querySelector('#palette0');
@@ -84,10 +89,13 @@ let teGridOn = false;
 let teSelectedColor = 0;
 let editorPalette = false;
 let editorTile = false;
+let palettesFilePath = false;
 
 // turn off Save button if no current file
 ipcRenderer.send('ALLOW_CHR_SAVE', false);
 ipcRenderer.send('ALLOW_NAMETABLE_SAVE', false);
+ipcRenderer.send('ALLOW_PALETTES_SAVE', false);
+ipcRenderer.send('ALLOW_PROJECT_SAVE', false);
 
 // default palettes
 const palettes = [
@@ -138,6 +146,7 @@ ipcRenderer.on('CHR_OPEN', (event, args) => {
   tileset.load(args.data, args.path, args.file);
   tilesetLabel.innerHTML = tileset.filename;
   updateTilesets(getTilesetProps());
+  currentNametable.draw(nctx, tileset, palettes);
 });
 
 ipcRenderer.on('CHR_SAVE_AS', (event, args) => {
@@ -153,7 +162,42 @@ ipcRenderer.on('CHR_SAVE', (event, args) => {
 ipcRenderer.on('NAMETABLE_OPEN', (event, args) => {
   console.log('got NAMETABLE_OPEN', event, args);
   currentNametable.load(args.data, args.path, args.file);
+  nametableLabel.innerHTML = currentNametable.filename;
   currentNametable.draw(nctx, tileset, palettes);
+});
+
+ipcRenderer.on('NAMETABLE_SAVE_AS', (event, args) => {
+  console.log('got NAMETABLE_SAVE_AS', event, args);
+  currentNametable.save(args.file.filePath);
+});
+
+ipcRenderer.on('NAMETABLE_SAVE', (event, args) => {
+  console.log('got NAMETABLE_SAVE', event, args);
+  currentNametable.save(currentNametable.filePath);
+});
+
+ipcRenderer.on('PALETTES_OPEN', (event, args) => {
+  console.log('got PALETTES_OPEN', event, args);
+  palettesFilePath = args.file.filePath;
+  palettesLabel.innerHTML = args.file;
+  loadPalettes(args.data, args.path, args.file);
+  currentNametable.draw(nctx, tileset, palettes);
+});
+
+ipcRenderer.on('PALETTES_SAVE_AS', (event, args) => {
+  console.log('got PALETTES_SAVE_AS', event, args);
+  palettesFilePath = args.file.filePath;
+  savePalettes(args.file.filePath);
+});
+
+ipcRenderer.on('PALETTES_SAVE', (event, args) => {
+  console.log('got PALETTES_SAVE', event, args);
+  savePalettes(palettesFilePath);
+});
+
+ipcRenderer.on('PROJECT_OPEN', (event, args) => {
+  console.log('got PROJECT_OPEN', event, args);
+  console.log(windowTitle);
 });
 
 // implementing functions
@@ -375,4 +419,37 @@ function handleTESaveButton (e) {
   updateTilesets(getTilesetProps());
   updateTilesetGrid(tgcctx, tGridOn, currentTile);
   tileEditorWindow.classList.add('hidden');
+}
+
+function loadPalettes (data, filepath, filename) {
+  if (data.length === 16) {
+    for (let i = 0; i < 4; i++) {
+      palettes[0].colors[i] = hexDisplay(data[i], 2);
+      palettes[1].colors[i] = hexDisplay(data[i + 4], 2);
+      palettes[2].colors[i] = hexDisplay(data[i + 8], 2);
+      palettes[3].colors[i] = hexDisplay(data[i + 12], 2);
+    }
+
+    for (let i = 0; i < 4; i++) {
+      palettes[i].update();
+    }
+
+    ipcRenderer.send('ALLOW_PALETTES_SAVE', true);
+  } else {
+    throw new Error(`Unsupported palette file size: ${data.length}, should be 16 bytes`);
+  }
+}
+
+function savePalettes (filepath) {
+  const buffer = Buffer.alloc(16);
+  for (let i = 0; i < 4; i++) {
+    buffer[i] = parseInt(palettes[0].colors[i], 16);
+    buffer[i + 4] = parseInt(palettes[1].colors[i], 16);
+    buffer[i + 8] = parseInt(palettes[2].colors[i], 16);
+    buffer[i + 12] = parseInt(palettes[3].colors[i], 16);
+  }
+
+  fs.writeFile(filepath, buffer, (err) => {
+    if (err) { console.error(err); }
+  });
 }
