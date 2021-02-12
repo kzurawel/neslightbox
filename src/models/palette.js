@@ -1,3 +1,4 @@
+const fs = require('fs');
 const { COLORS } = require('./colors.js');
 function Palette (colors, context, index) {
   if (colors && colors.length === 4) {
@@ -25,3 +26,18 @@ Palette.prototype = {
   }
 };
 exports.Palette = Palette;
+
+function savePalettes (filepath, palettes) {
+  const buffer = Buffer.alloc(16);
+  for (let i = 0; i < 4; i++) {
+    buffer[i] = parseInt(palettes[0].colors[i], 16);
+    buffer[i + 4] = parseInt(palettes[1].colors[i], 16);
+    buffer[i + 8] = parseInt(palettes[2].colors[i], 16);
+    buffer[i + 12] = parseInt(palettes[3].colors[i], 16);
+  }
+
+  fs.writeFile(filepath, buffer, (err) => {
+    if (err) { console.error(err); }
+  });
+}
+exports.savePalettes = savePalettes;

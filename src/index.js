@@ -42,7 +42,7 @@ ipcMain.on('ALLOW_PALETTES_SAVE', (e, allow) => {
   Menu.getApplicationMenu().getMenuItemById('savePalettes').enabled = allow;
 });
 ipcMain.on('ALLOW_PROJECT_SAVE', (e, allow) => {
-  Menu.getApplicationMenu().getMenuItemById('saveProject').enabled = allow;
+  Menu.getApplicationMenu().getMenuItemById('saveProjectFiles').enabled = allow;
 });
 
 // In this file you can include the rest of your app's specific main process

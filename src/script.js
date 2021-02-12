@@ -4,8 +4,9 @@ const { COLORS } = require('./models/colors.js');
 const bit = require('./utils/bitFns.js');
 const { Tileset } = require('./models/tileset.js');
 const { Tile } = require('./models/tile.js');
-const { Palette } = require('./models/palette.js');
+const { Palette, savePalettes } = require('./models/palette.js');
 const { Nametable } = require('./models/nametable.js');
+const { Project } = require('./models/project.js');
 const {
   convertNCToTileOffset,
   nametableStatusBar,
@@ -21,6 +22,7 @@ const {
   updateColors,
   updateTileEditorGrid
 } = require('./utils/drawing.js');
+const { getFileName } = require('./utils/files.js');
 
 // set up canvases
 const nc = document.querySelector('#nametabledisplay');
@@ -90,6 +92,8 @@ let teSelectedColor = 0;
 let editorPalette = false;
 let editorTile = false;
 let palettesFilePath = false;
+const project = new Project();
+const defaultWindowTitle = 'NES Lightbox';
 
 // turn off Save button if no current file
 ipcRenderer.send('ALLOW_CHR_SAVE', false);
@@ -145,6 +149,7 @@ ipcRenderer.on('CHR_OPEN', (event, args) => {
   console.log('got CHR_OPEN', event, args);
   tileset.load(args.data, args.path, args.file);
   tilesetLabel.innerHTML = tileset.filename;
+  project.tileset = tileset.filepath;
   updateTilesets(getTilesetProps());
   currentNametable.draw(nctx, tileset, palettes);
 });
@@ -163,6 +168,7 @@ ipcRenderer.on('NAMETABLE_OPEN', (event, args) => {
   console.log('got NAMETABLE_OPEN', event, args);
   currentNametable.load(args.data, args.path, args.file);
   nametableLabel.innerHTML = currentNametable.filename;
+  project.nametable = currentNametable.filepath;
   currentNametable.draw(nctx, tileset, palettes);
 });
 
@@ -178,8 +184,9 @@ ipcRenderer.on('NAMETABLE_SAVE', (event, args) => {
 
 ipcRenderer.on('PALETTES_OPEN', (event, args) => {
   console.log('got PALETTES_OPEN', event, args);
-  palettesFilePath = args.file.filePath;
+  palettesFilePath = args.path;
   palettesLabel.innerHTML = args.file;
+  project.palettes = args.path;
   loadPalettes(args.data, args.path, args.file);
   currentNametable.draw(nctx, tileset, palettes);
 });
@@ -187,17 +194,64 @@ ipcRenderer.on('PALETTES_OPEN', (event, args) => {
 ipcRenderer.on('PALETTES_SAVE_AS', (event, args) => {
   console.log('got PALETTES_SAVE_AS', event, args);
   palettesFilePath = args.file.filePath;
-  savePalettes(args.file.filePath);
+  savePalettes(args.file.filePath, palettes);
 });
 
 ipcRenderer.on('PALETTES_SAVE', (event, args) => {
   console.log('got PALETTES_SAVE', event, args);
-  savePalettes(palettesFilePath);
+  savePalettes(palettesFilePath, palettes);
 });
 
 ipcRenderer.on('PROJECT_OPEN', (event, args) => {
   console.log('got PROJECT_OPEN', event, args);
-  console.log(windowTitle);
+  project.load(args.options);
+  // tileset
+  if (project.tileset) {
+    const tilesetData = fs.readFileSync(project.tileset);
+    tileset.load(tilesetData, project.tileset, getFileName(project.tileset));
+    tilesetLabel.innerHTML = tileset.filename;
+    updateTilesets(getTilesetProps());
+    currentNametable.draw(nctx, tileset, palettes);
+  }
+  // nametable
+  if (project.nametable) {
+    const nametableData = fs.readFileSync(project.nametable);
+    currentNametable.load(nametableData, project.nametable, getFileName(project.nametable));
+    nametableLabel.innerHTML = currentNametable.filename;
+    currentNametable.draw(nctx, tileset, palettes);
+  }
+  // bank
+  bankSelector[project.bank].click();
+  // palettes
+  if (project.palettes) {
+    const palettesData = fs.readFileSync(project.palettes);
+    loadPalettes(palettesData, project.palettes, getFileName(project.palettes));
+    palettesLabel.innerHTML = getFileName(project.palettes);
+    updateTilesets(getTilesetProps());
+    currentNametable.draw(nctx, tileset, palettes);
+  }
+  windowTitle.innerHTML = `${defaultWindowTitle} | ${args.options.filename}`;
+});
+
+ipcRenderer.on('PROJECT_SAVE_AS', (event, args) => {
+  console.log('got PROJECT_SAVE_AS', event, args);
+  const values = {
+    nametable: currentNametable,
+    tileset: tileset,
+    palettes: palettes
+  };
+  project.save(args.file.filePath, values);
+});
+
+ipcRenderer.on('PROJECT_SAVE_FILES', (event, args) => {
+  console.log('got PROJECT_SAVE_FILES');
+  const values = {
+    nametable: currentNametable,
+    tileset: tileset,
+    palettes: palettes
+  };
+  project.save(project.filepath, values);
+  project.saveFiles(values);
 });
 
 // implementing functions
@@ -250,6 +304,7 @@ function handleTGridButton (e) {
 function handleBankSelector (value) {
   tileset.bank = parseInt(value, 10);
   currentTile = false;
+  project.bank = tileset.bank;
   updateTilesets(getTilesetProps());
   updateTilesetGrid(tgcctx, tGridOn, currentTile);
   currentNametable.draw(nctx, tileset, palettes);
@@ -438,18 +493,4 @@ function loadPalettes (data, filepath, filename) {
   } else {
     throw new Error(`Unsupported palette file size: ${data.length}, should be 16 bytes`);
   }
-}
-
-function savePalettes (filepath) {
-  const buffer = Buffer.alloc(16);
-  for (let i = 0; i < 4; i++) {
-    buffer[i] = parseInt(palettes[0].colors[i], 16);
-    buffer[i + 4] = parseInt(palettes[1].colors[i], 16);
-    buffer[i + 8] = parseInt(palettes[2].colors[i], 16);
-    buffer[i + 12] = parseInt(palettes[3].colors[i], 16);
-  }
-
-  fs.writeFile(filepath, buffer, (err) => {
-    if (err) { console.error(err); }
-  });
 }

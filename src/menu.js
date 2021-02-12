@@ -37,8 +37,8 @@ const template = [
       },
       {
         label: 'Save All Project Files',
-        click: menuFns.onSaveProject,
-        id: 'saveProject'
+        click: menuFns.onSaveProjectFiles,
+        id: 'saveProjectFiles'
       }
     ]
   },
