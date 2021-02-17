@@ -68,6 +68,10 @@ const tileEditorWindow = document.querySelector('.tileeditbg');
 const teGridButton = document.querySelector('#teGridButton');
 const teCancelButton = document.querySelector('#teCancelButton');
 const teSaveButton = document.querySelector('#teSaveButton');
+const teFlipHorizontalButton = document.querySelector('#teFlipHorizontalButton');
+const teFlipVerticalButton = document.querySelector('#teFlipVerticalButton');
+const teRotateCWButton = document.querySelector('#teRotateCWButton');
+const teRotateCCWButton = document.querySelector('#teRotateCCWButton');
 const palettesLabel = document.querySelector('.paletteswrapper .label');
 const nametableLabel = document.querySelector('.nametable .label');
 const windowTitle = document.querySelector('head title');
@@ -142,6 +146,10 @@ tEditButton.addEventListener('click', handleTEditButton);
 teCancelButton.addEventListener('click', handleTECancelButton);
 teGridButton.addEventListener('click', handleTEGridButton);
 teSaveButton.addEventListener('click', handleTESaveButton);
+teFlipHorizontalButton.addEventListener('click', handleTEFlipHorizontalButton);
+teFlipVerticalButton.addEventListener('click', handleTEFlipVerticalButton);
+teRotateCWButton.addEventListener('click', handleTERotateCWButton);
+teRotateCCWButton.addEventListener('click', handleTERotateCCWButton);
 tepc.addEventListener('click', handleTEPaletteClick);
 tegc.addEventListener('click', handleTileEditorClick);
 
@@ -474,6 +482,26 @@ function handleTESaveButton (e) {
   updateTilesets(getTilesetProps());
   updateTilesetGrid(tgcctx, tGridOn, currentTile);
   tileEditorWindow.classList.add('hidden');
+}
+
+function handleTEFlipHorizontalButton (e) {
+  editorTile.flipHorizontal();
+  editorTile.draw(tecctx, 0, 0, editorPalette);
+}
+
+function handleTEFlipVerticalButton (e) {
+  editorTile.flipVertical();
+  editorTile.draw(tecctx, 0, 0, editorPalette);
+}
+
+function handleTERotateCWButton (e) {
+  editorTile.rotateCW();
+  editorTile.draw(tecctx, 0, 0, editorPalette);
+}
+
+function handleTERotateCCWButton (e) {
+  editorTile.rotateCCW();
+  editorTile.draw(tecctx, 0, 0, editorPalette);
 }
 
 function loadPalettes (data, filepath, filename) {

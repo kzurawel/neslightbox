@@ -85,7 +85,7 @@ button, label, input, canvas {
 
 .paletterow {
   display: flex;
-  flex-direction: horizontal;
+  flex-direction: row;
   margin-bottom: 0.5rem;
 }
 
@@ -126,7 +126,7 @@ button, label, input, canvas {
 
 .tilesettools {
   display: flex;
-  flex-direction: horizontal;
+  flex-direction: row;
   justify-content: space-between;
   margin: 0.5rem auto;
 }
@@ -192,12 +192,32 @@ button, label, input, canvas {
 
 .tileedittools {
   display: flex;
-  flex-direction: horizontal;
+  flex-direction: row;
   justify-content: space-between;
 }
 
 .tileedittools div {
   display: flex;
+}
+
+.tileeditsavecancel {
+  display: flex;
+  margin-top: 1.5rem;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+#teCancelButton {
+  border: 1px solid #888;
+  border-radius: 4px;
+}
+
+#teSaveButton {
+  background: linear-gradient(180deg, #69a3fb, #0c6dff);
+  border: 1px solid #0463ff;
+  border-radius: 4px;
+  margin-left: 0.5rem;
+  padding: 4px 8px;
 }
 
 #tileeditorpalette, #canceltile {

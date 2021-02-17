@@ -20,6 +20,7 @@ Tile.prototype = {
       this.data[(7 - i) + 8] = t;
     }
   },
+
   flipHorizontal: function () {
     for (let i = 0; i < 16; ++i) {
       let d = this.data[i];
@@ -29,6 +30,37 @@ Tile.prototype = {
       this.data[i] = d;
     }
   },
+
+  rotateCW: function () {
+    const result = new Uint8Array(16);
+
+    for (let i = 0; i < 8; i++) {
+      for (let j = 0; j < 8; j++) {
+        result[i] = (((this.data[j] & (1 << (7 - i))) >> (7 - i)) << j) | result[i];
+        result[i + 8] = (((this.data[j + 8] & (1 << (7 - i))) >> (7 - i)) << j) | result[i + 8];
+      }
+    }
+
+    for (let i = 0; i < 16; i++) {
+      this.data[i] = result[i];
+    }
+  },
+
+  rotateCCW: function () {
+    const result = new Uint8Array(16);
+
+    for (let i = 0; i < 8; i++) {
+      for (let j = 0; j < 8; j++) {
+        result[i] = ((this.data[j] & (1 << i)) >> i) << (7 - j) | result[i];
+        result[i + 8] = ((this.data[j + 8] & (1 << i)) >> i) << (7 - j) | result[i + 8];
+      }
+    }
+
+    for (let i = 0; i < 16; i++) {
+      this.data[i] = result[i];
+    }
+  },
+
   draw: function (ctx, x, y, palette) {
     // draw tile data as a 8x8 image
     for (let row = 0; row < 8; row++) {
