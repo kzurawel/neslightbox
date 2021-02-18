@@ -105,9 +105,11 @@ exports.tilesetStatusBar = tilesetStatusBar;
 
 function convertCCToColor (x, y) {
   let colorColumn = Math.floor((x / 256) * 14);
+  if (colorColumn < 0) { colorColumn = 0; }
   if (colorColumn > 13) { colorColumn = 13; }
 
   let colorRow = Math.floor((y / 64) * 4);
+  if (colorRow < 0) { colorRow = 0; }
   if (colorRow > 3) { colorRow = 3; }
 
   return `${colorRow}${colorColumn.toString(16)}`;

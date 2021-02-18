@@ -6,41 +6,22 @@
   "main": "src/index.js",
   "scripts": {
     "start": "electron-forge start",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
-    "publish": "electron-forge publish",
-    "test": "semistandard && jest"
+    "test": "semistandard && jest",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder -mw"
   },
   "keywords": [],
   "author": "Kevin Zurawel",
   "license": "MIT",
   "config": {
-    "forge": {
-      "packagerConfig": {
-        "name": "NES Lightbox"
+    "build": {
+      "mac": {
+        "category": "public.app-category.developer-tools",
+        "target": "dmg"
       },
-      "makers": [
-        {
-          "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "neslightbox"
-          }
-        },
-        {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin"
-          ]
-        },
-        {
-          "name": "@electron-forge/maker-deb",
-          "config": {}
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {}
-        }
-      ]
+      "win": {
+        "target": "portable"
+      }
     }
   },
   "dependencies": {
@@ -48,11 +29,8 @@
   },
   "devDependencies": {
     "@electron-forge/cli": "^6.0.0-beta.54",
-    "@electron-forge/maker-deb": "^6.0.0-beta.54",
-    "@electron-forge/maker-rpm": "^6.0.0-beta.54",
-    "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
-    "@electron-forge/maker-zip": "^6.0.0-beta.54",
     "electron": "11.2.0",
+    "electron-builder": "^22.9.1",
     "jest": "^26.6.3",
     "semistandard": "^16.0.0"
   }

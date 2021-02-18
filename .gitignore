@@ -85,5 +85,6 @@ typings/
 # Webpack
 .webpack/
 
-# Electron-Forge
+# Electron-Forge / electron-builder
 out/
+dist/
