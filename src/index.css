@@ -192,12 +192,18 @@ button, label, input, canvas {
 
 .tileedittools {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  flex-direction: column;
 }
 
 .tileedittools div {
   display: flex;
+  flex-direction: row;
+  margin-bottom: 0.5rem;
+}
+
+.tileedittools div button,
+.tileedittools div canvas {
+  margin-right: 0.8rem;
 }
 
 .tileeditsavecancel {
@@ -218,10 +224,6 @@ button, label, input, canvas {
   border-radius: 4px;
   margin-left: 0.5rem;
   padding: 4px 8px;
-}
-
-#tileeditorpalette, #canceltile {
-  margin-right: 4px;
 }
 
 #tileeditor {
