@@ -8,7 +8,7 @@
     "start": "electron-forge start",
     "test": "semistandard && jest",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder -mw"
+    "dist": "electron-builder -mwl"
   },
   "keywords": [],
   "author": "Kevin Zurawel",
